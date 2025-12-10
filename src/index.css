@@ -1,0 +1,18 @@
+.auth-container{
+    background-image: url('../src/assets/images/authImg/auth-bg.png');
+    background-size: cover;
+    background-position: center center;
+}
+
+.bg-overlay{
+    background: linear-gradient(45deg,rgba(47,140,96,0.6),rgba(0,0,0,0.99));
+}
+.green-color{
+    color: #4AA35A;
+
+}
+
+.button-bg,
+.button-bg:hover{
+    background-color: #4AA35A;
+}
