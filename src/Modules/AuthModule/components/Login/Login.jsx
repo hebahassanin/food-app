@@ -21,7 +21,7 @@ export default function Login() {
   const onSubmit =async(data)=>{
     try {
       let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Login',data);
-      console.log(response);
+      localStorage.setItem("token",response.data.token);
       toast.success('Wow logged successfully!',
       {
         autoClose: 3000,

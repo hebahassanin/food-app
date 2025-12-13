@@ -16,3 +16,62 @@
 .button-bg:hover{
     background-color: #4AA35A;
 }
+.btnColor, 
+.btnColor:hover{
+    background-color: #009247;
+
+}
+/* .sidebar-container{
+    position: fixed;
+    top:0;
+    left:0;
+    height: 100vh;
+    z-index: 1000;
+} */
+
+.sidebar-container .ps-sidebar-container{
+    border-top-right-radius: 35px;
+    color: #fff;
+    min-height: 100vh;
+    background-color: rgba(31, 38, 62, 1);
+}
+.sidebar-container .ps-menu-button{
+    transition: all 1s;
+}
+.sidebar-container .ps-menu-button:hover{
+    background-color: rgba(0, 146, 77, 0.1) !important;
+    border-left: 5px solid rgba(0, 146, 77, 1) ;
+}
+
+.home-container,
+.recipes-container,
+.categories-container{
+    background-color: rgba(240, 255, 239, 1);
+}
+
+.layout {
+    display: flex;
+  }
+  
+  /* sidebar fixed */
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 1000;
+  }
+  
+  /* المحتوى */
+  .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .main-content.collapsed {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    transition: 0.3s;
+  }
