@@ -6,14 +6,17 @@ import axios from 'axios';
 import { useEffect } from 'react';
 
 import { IoIosSearch } from "react-icons/io";
+import DotLoader from 'react-spinners/DotLoader';
 
 export default function RecipesList() {
 
   const [recipesList, setRecipesList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAllRecipes =async()=>{
 
     try {
+      setLoading(true);
       let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Recipe/?pageSize=10&pageNumber=1',
     {headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}});
     console.log(response.data.data);
@@ -22,6 +25,8 @@ export default function RecipesList() {
       
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false);
     }
   }
 
@@ -83,7 +88,15 @@ export default function RecipesList() {
           </tr>
         </thead>
         <tbody>
-          {recipesList.map(recipe=>(
+          { loading ?(
+            <tr>
+              <td colSpan="7" className='text-center py-4'>
+                <div className='d-flex justify-content-center align-items-center'>
+                <DotLoader color="#0b4f0b" />
+                </div>
+              </td>
+            </tr>)
+         : recipesList.map(recipe=>(
             <tr key={recipe?.id}>
             <th scope="row">{recipe.id}</th>
             <td>{recipe?.name}</td>

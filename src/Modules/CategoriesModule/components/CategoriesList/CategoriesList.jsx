@@ -3,14 +3,17 @@ import Header from '../../../Shared/components/Header/Header'
 import headerImg1 from '../../../../assets/images/headerImgs/header1.svg'
 import axios from 'axios'
 import { useState } from 'react'
-import NoData from '../../../Shared/components/NoData/NoData'
+import NoData from '../../../Shared/components/NoData/NoData';
+import DotLoader from 'react-spinners/DotLoader';
 
 export default function CategoriesList() {
 
   const [categoriesList,setCategoriesList]= useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAllCategories =async()=>{
     try {
+      setLoading(true);
       let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Category/?pageSize=10&pageNumber=1',
       {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
       );
@@ -19,7 +22,10 @@ export default function CategoriesList() {
       
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
+
 
   }
 
@@ -48,16 +54,26 @@ export default function CategoriesList() {
             <th scope="col">#</th>
             <th scope="col">Category Name</th>
             <th scope="col">Creation Date</th>
-            <th scope="col">Modificatio nDate</th>
+            <th scope="col">Modification Date</th>
           </tr>
         </thead>
         <tbody>
-          {categoriesList.length >0 ?  categoriesList.map(category=>(
+          { loading ?(
+            <tr>
+              <td colSpan="4" className='text-center py-4'>
+              <div className='d-flex justify-content-center align-items-center'>
+              <DotLoader color="#0b4f0b" />
+              </div>
+
+              </td>
+            </tr>
+          )        
+          :categoriesList.length >0 ?  categoriesList.map(category=>(
             <tr key={category.id}>
             <th scope="row">{category.id}</th>
             <td>{category.name}</td>
-            <td>{category.creationDate}</td>
-            <td>{category.modificationDate}</td>
+            <td>{category.creationDate.split("T")[0]}</td>
+            <td>{category.modificationDate.split("T")[0]}</td>
           </tr>
           )) : <NoData/>}
         </tbody>
