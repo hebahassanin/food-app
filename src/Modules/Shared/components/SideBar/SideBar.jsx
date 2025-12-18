@@ -12,8 +12,19 @@ import { useState } from 'react';
 
 import { IoMdHome } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
+import { useContext } from 'react';
+import { AuthContext } from '../../../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 export default function SideBar({isCollapsed, setIsCollapsed}) {
+
+  const {logoutUser}= useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout=()=>{
+    logoutUser();
+    navigate("/login");
+   }
   
 
   // add active class to links in sidebar
@@ -37,7 +48,7 @@ export default function SideBar({isCollapsed, setIsCollapsed}) {
         <MenuItem component={<Link to="/dashboard/recipes"/>} icon={<FaQrcode />} className={`${pathname === '/dashboard/recipes'? "active": null}`}>Recipes</MenuItem>
         <MenuItem component={<Link to="/dashboard/categories"/>} icon={<LuCalendarDays />} className={`${pathname === '/dashboard/categories'? "active": null}`}>Categories</MenuItem>
         <MenuItem icon={<FaUnlockAlt />}>Change Password</MenuItem>
-        <MenuItem component={<Link to="/login"/>} icon={<IoLogOut />}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout} icon={<IoLogOut />}>Logout</MenuItem>
       </Menu>
     </Sidebar>
     </div>

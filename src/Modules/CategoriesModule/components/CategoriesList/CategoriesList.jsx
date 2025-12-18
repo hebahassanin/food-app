@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useState } from 'react'
 import NoData from '../../../Shared/components/NoData/NoData';
 import DotLoader from 'react-spinners/DotLoader';
+import { MdMoreHoriz } from "react-icons/md";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function CategoriesList() {
 
@@ -18,7 +20,7 @@ export default function CategoriesList() {
       {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
       );
       // console.log(response.data.data);
-      setCategoriesList(response.data.data);
+      setCategoriesList(response?.data?.data);
       
     } catch (error) {
       console.log(error);
@@ -33,6 +35,20 @@ export default function CategoriesList() {
     getAllCategories();
 
   },[])
+
+  const deleteCategory =async(id)=>{
+    try {
+      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Category/${id}`,
+      {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+      );
+      getAllCategories();
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
 
   return (
     <>
@@ -54,7 +70,7 @@ export default function CategoriesList() {
             <th scope="col">#</th>
             <th scope="col">Category Name</th>
             <th scope="col">Creation Date</th>
-            <th scope="col">Modification Date</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -69,11 +85,45 @@ export default function CategoriesList() {
             </tr>
           )        
           :categoriesList.length >0 ?  categoriesList.map(category=>(
-            <tr key={category.id}>
-            <th scope="row">{category.id}</th>
-            <td>{category.name}</td>
-            <td>{category.creationDate.split("T")[0]}</td>
-            <td>{category.modificationDate.split("T")[0]}</td>
+            <tr key={category?.id}>
+            <th scope="row">{category?.id}</th>
+            <td>{category?.name}</td>
+            <td>{category?.creationDate.split("T")[0]}</td>
+
+            <td>
+            <div className="dropdown">
+              <button
+                className="btn p-0 border-0"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <MdMoreHoriz size={20} />
+              </button>
+
+              <ul className="dropdown-menu">
+                <li>
+                  <button className="dropdown-item d-flex align-items-center gap-2">
+                    <FaEye /> View
+                  </button>
+                </li>
+
+                <li>
+                  <button className="dropdown-item d-flex align-items-center gap-2">
+                    <FaEdit /> Edit
+                  </button>
+                </li>
+
+                <li>
+                  <button onClick={()=>deleteCategory(category?.id)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <FaTrash  className='text-success'/> Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </td>
+
+
+
           </tr>
           )) : <NoData/>}
         </tbody>

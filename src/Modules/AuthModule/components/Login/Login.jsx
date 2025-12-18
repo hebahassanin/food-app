@@ -8,6 +8,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { useContext } from 'react';
+import { AuthContext} from '../../../../context/AuthContext';
 
 export default function Login() {
 
@@ -17,11 +19,15 @@ export default function Login() {
   // Show and hide password with icon
   const [showPassword, setShowPassword]=useState(false);
 
+  let {saveUserData}= useContext(AuthContext);
+
 
   const onSubmit =async(data)=>{
     try {
       let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Login',data);
-      localStorage.setItem("token",response.data.token);
+      localStorage.setItem("token",response?.data?.token);
+      saveUserData();
+
       toast.success('Wow logged successfully!',
       {
         autoClose: 3000,
@@ -29,7 +35,7 @@ export default function Login() {
       navigate('/dashboard');
       
     } catch (error) {
-      toast.error(error.response.data.message,
+      toast.error(error.response?.data?.message,
         {
           autoClose: 3000,
         });

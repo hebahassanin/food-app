@@ -3,12 +3,15 @@ import Header from '../../../Shared/components/Header/Header'
 import headerImg from '../../../../assets/images/headerImgs/header.png'
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../../../context/AuthContext';
 
 export default function Dashboard() {
   const navigate =useNavigate();
+  const {userData}= useContext(AuthContext);
   return (
     <>
-      <Header title={'Welcome Upskilling !'} description={'This is a welcoming screen for the entry of the application , you can now see the options'} imgUrl={headerImg}/>
+      <Header title={`Welcome ${userData?.userName}`} description={'This is a welcoming screen for the entry of the application , you can now see the options'} imgUrl={headerImg}/>
 
       <div className="home-container m-3 d-flex justify-content-between align-items-center p-4 rounded-3">
         <div className="caption">

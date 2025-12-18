@@ -59,7 +59,7 @@
     z-index: 1000;
   }
   
-  /* المحتوى */
+  /* content*/
   .main-content {
     margin-left: 250px;
     width: calc(100% - 250px);

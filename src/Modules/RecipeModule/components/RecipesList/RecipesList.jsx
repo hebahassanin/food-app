@@ -58,18 +58,18 @@ export default function RecipesList() {
           />
         </div>
 
-        <select class="form-select form-select-sm w-auto" aria-label="Small select example">
-          <option selected>Tag</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+        <select defaultValue='1' className="form-select form-select-sm w-auto" aria-label="Small select example">
+          <option value='1'>Tag</option>
+          <option value="2">One</option>
+          <option value="3">Two</option>
+          <option value="4">Three</option>
         </select>
 
-        <select class="form-select form-select-sm w-auto" aria-label="Small select example">
-          <option selected>Category</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+        <select defaultValue='1' className="form-select form-select-sm w-auto" aria-label="Small select example">
+          <option value='1'>Category</option>
+          <option value="2">One</option>
+          <option value="3">Two</option>
+          <option value="4">Three</option>
         </select>
 
     </div>

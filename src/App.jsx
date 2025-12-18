@@ -15,6 +15,7 @@ import CategoriesList from './Modules/CategoriesModule/components/CategoriesList
 import CategoryData from './Modules/CategoriesModule/components/CategoryData/CategoryData';
 import UsersList from './Modules/UsersModule/components/UsersList/UsersList';
 import { ToastContainer } from 'react-toastify';
+import ProtectedRoute from './Modules/Shared/components/ProtectedRoute/ProtectedRoute';
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
       },
       {
         path:"dashboard",
-        element:<MasterLayout/>,
+        element:<ProtectedRoute><MasterLayout/></ProtectedRoute>,
         errorElement:<NotFound/>,
         children:[
           {index:true, element:<Dashboard/>},
