@@ -8,10 +8,29 @@ import { useEffect } from 'react';
 import { IoIosSearch } from "react-icons/io";
 import DotLoader from 'react-spinners/DotLoader';
 
+import { MdMoreHoriz } from "react-icons/md";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
+import recipeImg from '../../../../assets/images/recipeImage.jpg';
+
 export default function RecipesList() {
 
   const [recipesList, setRecipesList] = useState([]);
+  const [recipeId, setRecipeId] = useState(0);
+  const [recipeName, setRecipeName] = useState('');
+
   const [loading, setLoading] = useState(false);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = (recipe) => {
+    setRecipeId(recipe.id);
+    setRecipeName(recipe.name);
+    setShow(true);
+  }
 
   const getAllRecipes =async()=>{
 
@@ -30,6 +49,22 @@ export default function RecipesList() {
     }
   }
 
+
+  const deleteRecipe =async()=>{
+    try {
+      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Recipe/${recipeId}`,
+      {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+      );
+      handleClose();
+      getAllRecipes();
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   useEffect(()=>{
     getAllRecipes();
   },[])
@@ -45,6 +80,22 @@ export default function RecipesList() {
       </div>
       <button className='btn btn-success'>Add New Recipes</button>
     </div>
+
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body>
+          <DeleteConfirmation deleteItem={'Recipe'} name={recipeName}/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-danger" onClick={deleteRecipe}>
+            Delete this item
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
 
     <div className='search-container d-flex align-items-center gap-3 m-3'>
         <div className="input-group">
@@ -85,6 +136,7 @@ export default function RecipesList() {
             <th scope="col">Description</th>
             <th scope="col">Tag</th>
             <th scope="col">Category</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +152,7 @@ export default function RecipesList() {
             <tr key={recipe?.id}>
             <th scope="row">{recipe.id}</th>
             <td>{recipe?.name}</td>
-            <td><img style={{height: '60px',width:'80px'}} src={`https://upskilling-egypt.com:3006/${recipe?.imagePath}`}/></td>
+            <td><img style={{height: '60px',width:'80px'}} src={recipe?.imagePath ?`https://upskilling-egypt.com:3006/${recipe?.imagePath}`: recipeImg}/></td>
             <td>{recipe?.price}</td>
             <td>{recipe?.description}</td>
             <td>{recipe?.tag.name}</td>
@@ -109,6 +161,39 @@ export default function RecipesList() {
               {cat?.name}
               </div>
             ))}</td>
+
+
+            <td>
+              <div className="dropdown">
+                <button
+                  className="btn p-0 border-0"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <MdMoreHoriz size={20} />
+                </button>
+
+                <ul className="dropdown-menu">
+                  <li>
+                    <button className="dropdown-item text-success d-flex align-items-center gap-2">
+                      <FaEye /> View
+                    </button>
+                  </li>
+
+                  <li>
+                    <button className="dropdown-item text-success d-flex align-items-center gap-2">
+                      <FaEdit /> Edit
+                    </button>
+                  </li>
+
+                  <li>
+                    <button onClick={()=> handleShow(recipe)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                      <FaTrash/> Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+          </td>
           </tr>
 
 

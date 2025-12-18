@@ -8,10 +8,26 @@ import DotLoader from 'react-spinners/DotLoader';
 import { MdMoreHoriz } from "react-icons/md";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
+
 export default function CategoriesList() {
 
   const [categoriesList,setCategoriesList]= useState([]);
+  const [categoryId, setCategoryId] = useState(0);
+  const [categoryName, setCategoryName] = useState('');
+
   const [loading, setLoading] = useState(false);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = (category) => {
+    setCategoryId(category.id);
+    setCategoryName(category.name);
+    setShow(true);
+  }
 
   const getAllCategories =async()=>{
     try {
@@ -31,23 +47,25 @@ export default function CategoriesList() {
 
   }
 
-  useEffect(()=>{
-    getAllCategories();
-
-  },[])
-
-  const deleteCategory =async(id)=>{
+  const deleteCategory =async()=>{
     try {
-      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Category/${id}`,
+      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Category/${categoryId}`,
       {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
       );
+      handleClose();
       getAllCategories();
+      
       
     } catch (error) {
       console.log(error);
       
     }
   }
+
+  useEffect(()=>{
+    getAllCategories();
+
+  },[])
 
 
   return (
@@ -61,6 +79,21 @@ export default function CategoriesList() {
       </div>
       <button className='btn btn-success'>Add New Category</button>
     </div>
+
+      <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body>
+          <DeleteConfirmation deleteItem={'Category'} name={categoryName}/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-danger" onClick={deleteCategory}>
+            Delete this item
+          </Button>
+        </Modal.Footer>
+      </Modal>
       
       <div className="table-container p-3 m-3">
 
@@ -102,20 +135,20 @@ export default function CategoriesList() {
 
               <ul className="dropdown-menu">
                 <li>
-                  <button className="dropdown-item d-flex align-items-center gap-2">
+                  <button className="dropdown-item text-success d-flex align-items-center gap-2">
                     <FaEye /> View
                   </button>
                 </li>
 
                 <li>
-                  <button className="dropdown-item d-flex align-items-center gap-2">
+                  <button className="dropdown-item text-success d-flex align-items-center gap-2">
                     <FaEdit /> Edit
                   </button>
                 </li>
 
                 <li>
-                  <button onClick={()=>deleteCategory(category?.id)} className="dropdown-item text-success d-flex align-items-center gap-2">
-                    <FaTrash  className='text-success'/> Delete
+                  <button onClick={()=> handleShow(category)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <FaTrash/> Delete
                   </button>
                 </li>
               </ul>

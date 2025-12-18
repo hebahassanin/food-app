@@ -3,7 +3,7 @@ import React from 'react'
 export default function Header({title,description,imgUrl}) {
   return (
     <>
-    <header className='bg-success m-3 rounded-3'>
+    <header className='bg-header m-3 rounded-3'>
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-8 text-white">

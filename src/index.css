@@ -21,6 +21,14 @@
     background-color: #009247;
 
 }
+
+
+/*Header */
+.bg-header{
+    background: url('./assets/images/circls55.svg') no-repeat left ,rgb(0, 146, 71);
+}
+
+
 .sidebar-container .ps-sidebar-root{
     border-right: none;
 }
