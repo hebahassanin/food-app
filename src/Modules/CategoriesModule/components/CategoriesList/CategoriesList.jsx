@@ -95,9 +95,15 @@ export default function CategoriesList() {
         </Modal.Footer>
       </Modal>
       
-      <div className="table-container p-3 m-3">
+      { loading ?(
+            
+              <div className='d-flex justify-content-center align-items-center py-5'>
+              <DotLoader color="#0b4f0b" />
+              </div>
 
-      <table className="table table-striped">
+          )        
+          :categoriesList.length >0 ?(
+      <table className="table table-striped m-3">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -107,21 +113,11 @@ export default function CategoriesList() {
           </tr>
         </thead>
         <tbody>
-          { loading ?(
-            <tr>
-              <td colSpan="4" className='text-center py-4'>
-              <div className='d-flex justify-content-center align-items-center'>
-              <DotLoader color="#0b4f0b" />
-              </div>
-
-              </td>
-            </tr>
-          )        
-          :categoriesList.length >0 ?  categoriesList.map(category=>(
+           {categoriesList.map(category=>(
             <tr key={category?.id}>
             <th scope="row">{category?.id}</th>
             <td>{category?.name}</td>
-            <td>{category?.creationDate.split("T")[0]}</td>
+            <td>{category?.creationDate?.split("T")[0]}</td>
 
             <td>
             <div className="dropdown">
@@ -154,16 +150,11 @@ export default function CategoriesList() {
               </ul>
             </div>
           </td>
-
-
-
           </tr>
-          )) : <NoData/>}
+          ))} 
         </tbody>
       </table>
-
-
-      </div>
+          ):(<NoData/>)}
     </>
   )
 }

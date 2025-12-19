@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
 import recipeImg from '../../../../assets/images/recipeImage.jpg';
+import NoData from '../../../Shared/components/NoData/NoData';
 
 export default function RecipesList() {
 
@@ -125,8 +126,16 @@ export default function RecipesList() {
 
     </div>
    
+    
 
-    <table className="table table-striped m-3">
+     
+      {loading ?(
+          <div className='d-flex justify-content-center align-items-center py-5'>
+          <DotLoader color="#0b4f0b" />
+          </div>
+          )        
+          :recipesList.length >0 ?(
+      <table className="table table-striped m-3">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -140,22 +149,18 @@ export default function RecipesList() {
           </tr>
         </thead>
         <tbody>
-          { loading ?(
-            <tr>
-              <td colSpan="7" className='text-center py-4'>
-                <div className='d-flex justify-content-center align-items-center'>
-                <DotLoader color="#0b4f0b" />
-                </div>
-              </td>
-            </tr>)
-         : recipesList.map(recipe=>(
+         
+         {recipesList.map(recipe=>(
             <tr key={recipe?.id}>
-            <th scope="row">{recipe.id}</th>
+            <th scope="row">{recipe?.id}</th>
             <td>{recipe?.name}</td>
-            <td><img style={{height: '60px',width:'80px'}} src={recipe?.imagePath ?`https://upskilling-egypt.com:3006/${recipe?.imagePath}`: recipeImg}/></td>
+            <td><img style={{height: '60px',width:'80px', objectFit:'cover', borderRadius:'6px'}} 
+                src={recipe?.imagePath ?`https://upskilling-egypt.com:3006/${recipe?.imagePath}`: recipeImg}
+                alt={recipe?.name}/>
+             </td>
             <td>{recipe?.price}</td>
             <td>{recipe?.description}</td>
-            <td>{recipe?.tag.name}</td>
+            <td>{recipe?.tag?.name}</td>
             <td>{recipe?.category.map(cat=>(
                <div key={cat?.id}>
               {cat?.name}
@@ -196,13 +201,10 @@ export default function RecipesList() {
           </td>
           </tr>
 
-
           ))}
-          
-            
-          
         </tbody>
       </table>
+        ):(<NoData/>)}
 
     </>
   )
