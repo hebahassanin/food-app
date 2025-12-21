@@ -11,6 +11,8 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
+import Form from 'react-bootstrap/Form';
+import { toast } from 'react-toastify'
 
 export default function CategoriesList() {
 
@@ -29,6 +31,28 @@ export default function CategoriesList() {
     setShow(true);
   }
 
+
+  // Add and update Modal
+  const [showFormModal, setShowFormModal] = useState(false);
+
+  const[currentCategoryId,setCurrentCategoryId]= useState(null);
+  const [categoryValue, setCategoryValue] = useState('');
+
+  const handleEditShow = (category) => {
+    setCurrentCategoryId(category.id);
+    setCategoryValue(category.name); // الاسم يتحط في input
+    setShowFormModal(true);         // افتحي المودال
+  };
+
+  // Add Model
+  const handleAddShow = () => {
+    setCurrentCategoryId(null);
+    setCategoryValue('');
+    setShowFormModal(true);
+  }
+
+
+  //  getAllCategories
   const getAllCategories =async()=>{
     try {
       setLoading(true);
@@ -43,10 +67,51 @@ export default function CategoriesList() {
     }finally{
       setLoading(false)
     }
-
-
   }
 
+  // Add and Update Category
+  const submitCategory =async()=>{
+
+    if(currentCategoryId){
+      try {
+        await axios.put(`https://upskilling-egypt.com:3006/api/v1/Category/${currentCategoryId}`,{name: categoryValue},
+        {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+        );
+        
+        setShowFormModal(false);
+        toast.success("Category updated successfully",{autoClose: 3000})
+        setCategoryValue('');
+        setCurrentCategoryId(null);
+        getAllCategories();
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+
+    }else{
+      // Add Category
+
+      try {
+        await axios.post('https://upskilling-egypt.com:3006/api/v1/Category/',{name: categoryValue},
+        {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+        );
+        setShowFormModal(false);
+        toast.success("Category created successfully",{autoClose: 3000})
+        setCategoryValue('');
+        setCurrentCategoryId(null);
+        getAllCategories();
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+
+    }
+   
+  }
+
+ // deleteCategory
   const deleteCategory =async()=>{
     try {
       let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Category/${categoryId}`,
@@ -77,9 +142,11 @@ export default function CategoriesList() {
         <h4>Categories Table Details</h4>
         <p>You can check all details</p>
       </div>
-      <button className='btn btn-success'>Add New Category</button>
+      <button className='btn btn-success' onClick={handleAddShow}>Add New Category</button>
     </div>
 
+
+     {/*  Modal to delete Category*/}
       <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
@@ -94,6 +161,31 @@ export default function CategoriesList() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+    {/*-------Modal to Add Or Update Category--- */}
+      <Modal show={showFormModal} onHide={()=> setShowFormModal(false)}>
+      <Modal.Header closeButton>
+          <Modal.Title>{currentCategoryId ? "Update Category":"Add Category"}</Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body>
+        <Form>
+            <Form.Control
+              type="text"
+              placeholder="Category Name"
+              value={categoryValue}
+              onChange={(e)=> setCategoryValue(e.target.value)}
+            />
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={submitCategory}>
+          {currentCategoryId ? "Update Category":"Add Category"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
       
       { loading ?(
             
@@ -137,7 +229,7 @@ export default function CategoriesList() {
                 </li>
 
                 <li>
-                  <button className="dropdown-item text-success d-flex align-items-center gap-2">
+                  <button onClick={()=> handleEditShow(category)} className="dropdown-item text-success d-flex align-items-center gap-2">
                     <FaEdit /> Edit
                   </button>
                 </li>

@@ -15,12 +15,14 @@ import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
 import recipeImg from '../../../../assets/images/recipeImage.jpg';
 import NoData from '../../../Shared/components/NoData/NoData';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function RecipesList() {
 
   const [recipesList, setRecipesList] = useState([]);
   const [recipeId, setRecipeId] = useState(0);
   const [recipeName, setRecipeName] = useState('');
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
@@ -79,7 +81,7 @@ export default function RecipesList() {
         <h4>Recipe Table Details</h4>
         <p>You can check all details</p>
       </div>
-      <button className='btn btn-success'>Add New Recipes</button>
+      <button className='btn btn-success' onClick={()=> navigate('/dashboard/recipe-data')}>Add New Recipes</button>
     </div>
 
     <Modal show={show} onHide={handleClose}>
@@ -186,9 +188,9 @@ export default function RecipesList() {
                   </li>
 
                   <li>
-                    <button className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <Link to={`/dashboard/recipe-data/${recipe.id}`} className="dropdown-item text-success d-flex align-items-center gap-2">
                       <FaEdit /> Edit
-                    </button>
+                    </Link>
                   </li>
 
                   <li>
