@@ -16,7 +16,7 @@ export default function RecipeData() {
   const {id}=useParams();
   console.log(id);
 
-  let{register,formState:{errors,isSubmitting}, reset,handleSubmit}= useForm();
+  let{register,formState:{errors,isSubmitting}, reset,setValue,handleSubmit}= useForm();
 
 
   // -------formData-------
@@ -178,13 +178,16 @@ export default function RecipeData() {
       {errors.description && <div className='text-danger'>{errors.description.message}</div>}
 
       <input type="file" className="form-control my-2" placeholder="Recipe file" aria-label="file" 
-      aria-describedby="basic-addon1" onChange={(e)=> {
+      aria-describedby="basic-addon1" 
+      {...register('recipeImage',{
+        onChange:(e)=> {
         const file = e.target.files[0];
         if(file){
           setPreviewImage(URL.createObjectURL(file));
+          // setValue('recipeImage', e.target.files);
         }
-      }}
-      {...register('recipeImage')}
+      }
+      })}
       />
 
       {previewImage && (
