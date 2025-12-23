@@ -16,6 +16,7 @@ import CategoryData from './Modules/CategoriesModule/components/CategoryData/Cat
 import UsersList from './Modules/UsersModule/components/UsersList/UsersList';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Modules/Shared/components/ProtectedRoute/ProtectedRoute';
+import ChangePassword from './Modules/AuthModule/components/ChangePassword/ChangePassword';
 
 function App() {
 
@@ -31,7 +32,8 @@ function App() {
           {path:"register",element:<Register/>},
           {path:"forget-pass",element:<ForgetPassword/>},
           {path:"reset-pass",element:<ResetPassword/>},
-          {path:"verify-account",element:<VerifyAccount/>}
+          {path:"verify-account",element:<VerifyAccount/>},
+         
         ]
       },
       {
@@ -45,6 +47,7 @@ function App() {
           {path:"categories",element:<CategoriesList/>},
           {path:"category-data",element:<CategoryData/>},
           {path:"users",element:<UsersList/>},
+          {path:"change-pass",element:<ChangePassword/>}
         ]
       }
     ])

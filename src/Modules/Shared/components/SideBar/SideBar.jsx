@@ -47,7 +47,7 @@ export default function SideBar({isCollapsed, setIsCollapsed}) {
         <MenuItem component={<Link to="/dashboard/users"/>} icon={<HiUsers />} className={`${pathname === '/dashboard/users'? "active": null}`}>Users</MenuItem>
         <MenuItem component={<Link to="/dashboard/recipes"/>} icon={<FaQrcode />} className={`${pathname === '/dashboard/recipes'? "active": null}`}>Recipes</MenuItem>
         <MenuItem component={<Link to="/dashboard/categories"/>} icon={<LuCalendarDays />} className={`${pathname === '/dashboard/categories'? "active": null}`}>Categories</MenuItem>
-        <MenuItem icon={<FaUnlockAlt />}>Change Password</MenuItem>
+        <MenuItem component={<Link to="/dashboard/change-pass" />} icon={<FaUnlockAlt />}>Change Password</MenuItem>
         <MenuItem onClick={handleLogout} icon={<IoLogOut />}>Logout</MenuItem>
       </Menu>
     </Sidebar>

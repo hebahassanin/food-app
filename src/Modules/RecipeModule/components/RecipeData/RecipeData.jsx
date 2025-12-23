@@ -190,13 +190,43 @@ export default function RecipeData() {
       })}
       />
 
-      {previewImage && (
+      {/* {previewImage && (
         <img src={previewImage} alt="preview" style={{width:'160px', height: '120px',
          objectFit:'cover',borderRadius:'8px', marginTop: '10px'}}/>
+      )} */}
+
+      {previewImage && (
+        <div style={{ position: 'relative', display: 'inline-block', marginTop: '20px' }}>
+          <img 
+            src={previewImage} 
+            alt="preview" 
+            style={{width:'160px', height: '120px', objectFit:'cover', borderRadius:'8px'}} 
+          />
+          <button 
+            type="button"
+            onClick={() => setPreviewImage(null)}
+            style={{
+              position: 'absolute',
+              top: '-8px',right: '-8px',background: 'gray',
+              color: 'white',border: 'none', borderRadius: '50%',width: '20px',
+              height: '20px',cursor: 'pointer',fontWeight: 'bold',lineHeight: '20px',padding: 0,
+            }}
+          >
+            ×
+          </button>
+        </div>
       )}
 
       <div className="btns d-flex justify-content-end my-4">
-        <button disabled={isSubmitting} className={`btn btn-success mx-3 px-4 ${isSubmitting? "opacity-50":""}`}>Save</button>
+        <button disabled={isSubmitting} className="btn btn-success mx-3 px-4">
+          {isSubmitting?
+          (
+            <>
+            Save
+            <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+            </>
+          ):("Save")}
+          </button>
         <button className='btn btn-outline-success mx-2 px-4' 
          onClick={()=> navigate('/dashboard/recipes')}>
           Cancel

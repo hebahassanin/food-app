@@ -16,6 +16,7 @@ import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/De
 import recipeImg from '../../../../assets/images/recipeImage.jpg';
 import NoData from '../../../Shared/components/NoData/NoData';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function RecipesList() {
 
@@ -25,6 +26,10 @@ export default function RecipesList() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+
+  // to disable button after delete to prevent click again on button
+  const [isDeleting, setIsDeleting] = useState(false);
+
 
   const [show, setShow] = useState(false);
 
@@ -52,19 +57,22 @@ export default function RecipesList() {
     }
   }
 
-
+ //Delete Recipe
   const deleteRecipe =async()=>{
     try {
+      setIsDeleting(true);
       let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Recipe/${recipeId}`,
       {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
       );
       handleClose();
+      toast.success("Recipe deleted successfully",{autoClose: 3000})
       getAllRecipes();
-      
-      
+
     } catch (error) {
-      console.log(error);
-      
+      // console.log(error);
+      toast.error('Failed to delete Recipe',{autoClose:3000});
+    }finally{
+      setIsDeleting(false);
     }
   }
 
@@ -93,8 +101,13 @@ export default function RecipesList() {
           <DeleteConfirmation deleteItem={'Recipe'} name={recipeName}/>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-danger" onClick={deleteRecipe}>
-            Delete this item
+          <Button variant="outline-danger" disabled={isDeleting} onClick={deleteRecipe}>
+          {isDeleting ? (
+           <> 
+           Deleting 
+           <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+           </>
+           ):('Delete this item')} 
           </Button>
         </Modal.Footer>
       </Modal>
@@ -188,13 +201,13 @@ export default function RecipesList() {
                   </li>
 
                   <li>
-                    <Link to={`/dashboard/recipe-data/${recipe.id}`} className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <Link to={`/dashboard/recipe-data/${recipe.id}`} className="dropdown-item text-warning d-flex align-items-center gap-2">
                       <FaEdit /> Edit
                     </Link>
                   </li>
 
                   <li>
-                    <button onClick={()=> handleShow(recipe)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <button onClick={()=> handleShow(recipe)} className="dropdown-item text-danger d-flex align-items-center gap-2">
                       <FaTrash/> Delete
                     </button>
                   </li>

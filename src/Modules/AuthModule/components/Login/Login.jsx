@@ -13,7 +13,7 @@ import { AuthContext} from '../../../../context/AuthContext';
 
 export default function Login() {
 
-  let {register,formState:{errors},handleSubmit} =useForm();
+  let {register,formState:{errors,isSubmitting},handleSubmit} =useForm();
   let navigate= useNavigate();
 
   // Show and hide password with icon
@@ -81,7 +81,15 @@ export default function Login() {
         <Link className='text-decoration-none green-color' to="/forget-pass">Forget Password</Link>
       </div>
 
-      <button className='btn button-bg text-white  fs-5 fw-bold w-100 py-2'>Login</button>
+      <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2'>
+        {isSubmitting ?(
+          <>
+          Login
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):('Login')}
+       
+        </button>
 
       </form>
     </>

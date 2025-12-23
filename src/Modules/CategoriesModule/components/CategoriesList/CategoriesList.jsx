@@ -22,8 +22,14 @@ export default function CategoriesList() {
 
   const [loading, setLoading] = useState(false);
 
-  const [show, setShow] = useState(false);
+  // to disable button after delete to prevent click again on button
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  const [isSubmittingCategory, setIsSubmittingCategory] = useState(false);
+
+  
+  // Delete Modal
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = (category) => {
     setCategoryId(category.id);
@@ -38,10 +44,11 @@ export default function CategoriesList() {
   const[currentCategoryId,setCurrentCategoryId]= useState(null);
   const [categoryValue, setCategoryValue] = useState('');
 
+  // Update Modal
   const handleEditShow = (category) => {
     setCurrentCategoryId(category.id);
-    setCategoryValue(category.name); // الاسم يتحط في input
-    setShowFormModal(true);         // افتحي المودال
+    setCategoryValue(category.name); 
+    setShowFormModal(true);         
   };
 
   // Add Model
@@ -72,6 +79,9 @@ export default function CategoriesList() {
   // Add and Update Category
   const submitCategory =async()=>{
 
+    setIsSubmittingCategory(true);
+
+    // Update Category
     if(currentCategoryId){
       try {
         await axios.put(`https://upskilling-egypt.com:3006/api/v1/Category/${currentCategoryId}`,{name: categoryValue},
@@ -85,13 +95,15 @@ export default function CategoriesList() {
         getAllCategories();
         
       } catch (error) {
-        console.log(error);
-        
+        // console.log(error);
+        toast.error("Failed to updated Category");
+      }finally{
+        setIsSubmittingCategory(false)
       }
 
     }else{
-      // Add Category
 
+      // Add Category
       try {
         await axios.post('https://upskilling-egypt.com:3006/api/v1/Category/',{name: categoryValue},
         {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -103,10 +115,11 @@ export default function CategoriesList() {
         getAllCategories();
         
       } catch (error) {
-        console.log(error);
-        
+        // console.log(error);
+        toast.error("Failed to Create Category",{autoClose: 3000});  
+      }finally{
+        setIsSubmittingCategory(false);
       }
-
     }
    
   }
@@ -114,16 +127,18 @@ export default function CategoriesList() {
  // deleteCategory
   const deleteCategory =async()=>{
     try {
+      setIsDeleting(true);
       let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Category/${categoryId}`,
       {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
       );
       handleClose();
+      toast.success("Category deleted successfully",{autoClose: 3000})
       getAllCategories();
-      
-      
     } catch (error) {
-      console.log(error);
-      
+      // console.log(error);
+      toast.error('Failed to delete Category',{autoClose:3000});
+    }finally{
+      setIsDeleting(false);
     }
   }
 
@@ -147,7 +162,7 @@ export default function CategoriesList() {
 
 
      {/*  Modal to delete Category*/}
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -156,14 +171,19 @@ export default function CategoriesList() {
           <DeleteConfirmation deleteItem={'Category'} name={categoryName}/>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-danger" onClick={deleteCategory}>
-            Delete this item
+          <Button variant="outline-danger"  disabled={isDeleting} onClick={deleteCategory}>
+          {isDeleting ? (
+           <> 
+           Deleting 
+           <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+           </>
+           ):('Delete this item')} 
           </Button>
         </Modal.Footer>
       </Modal>
 
     {/*-------Modal to Add Or Update Category--- */}
-      <Modal show={showFormModal} onHide={()=> setShowFormModal(false)}>
+      <Modal show={showFormModal} onHide={()=> setShowFormModal(false)} centered>
       <Modal.Header closeButton>
           <Modal.Title>{currentCategoryId ? "Update Category":"Add Category"}</Modal.Title>
         </Modal.Header>
@@ -179,8 +199,15 @@ export default function CategoriesList() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={submitCategory}>
-          {currentCategoryId ? "Update Category":"Add Category"}
+          <Button variant="success" disabled={isSubmittingCategory} onClick={submitCategory}>
+          {isSubmittingCategory ?(
+            <>
+            {currentCategoryId ? "Updating...":"Adding..."}
+            <span className='spinner-border spinner-border-sm ms-2'/>
+            </>
+          ):(
+            currentCategoryId ? "Update Category":"Add Category"
+          )}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -196,7 +223,7 @@ export default function CategoriesList() {
           )        
           :categoriesList.length >0 ?(
       <table className="table table-striped m-3">
-        <thead>
+        <thead className='table-secondary'>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Category Name</th>
@@ -229,13 +256,13 @@ export default function CategoriesList() {
                 </li>
 
                 <li>
-                  <button onClick={()=> handleEditShow(category)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                  <button onClick={()=> handleEditShow(category)} className="dropdown-item text-warning d-flex align-items-center gap-2">
                     <FaEdit /> Edit
                   </button>
                 </li>
 
                 <li>
-                  <button onClick={()=> handleShow(category)} className="dropdown-item text-success d-flex align-items-center gap-2">
+                  <button onClick={()=> handleShow(category)} className="dropdown-item text-danger d-flex align-items-center gap-2">
                     <FaTrash/> Delete
                   </button>
                 </li>

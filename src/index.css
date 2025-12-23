@@ -12,10 +12,32 @@
 
 }
 
-.button-bg,
+/* .button-bg,
 .button-bg:hover{
     background-color: #4AA35A;
+} */
+
+.button-bg {
+    background-color: #4AA35A; 
+    color: white;           
+    border: none;
 }
+
+.button-bg:hover {
+    background-color: #4AA35A; 
+}
+
+.button-bg:active {
+    background-color: #449d55; 
+}
+
+.button-bg:disabled {
+    background-color: #4AA35A; 
+    opacity: 0.8;              
+    cursor: not-allowed;
+}
+
+
 .btnColor, 
 .btnColor:hover{
     background-color: #009247;

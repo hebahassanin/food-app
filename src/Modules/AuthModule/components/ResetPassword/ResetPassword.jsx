@@ -50,7 +50,7 @@ export default function ResetPassword() {
 
       <div className="input-group mb-3">
         <span className="input-group-text" id="basic-addon1"><CiMobile2 size={18}/></span>
-        <input type="text" defaultValue={passedEmail}
+        <input type="text" readOnly defaultValue={passedEmail}
          {...register('email',{required:'email is required',
          pattern:{
            value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
@@ -63,7 +63,7 @@ export default function ResetPassword() {
 
       <div className="input-group mb-3">
         <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
-        <input type="text" class="form-control" placeholder="OTP" aria-label="seed" aria-describedby="basic-addon1"
+        <input type="text" className="form-control" placeholder="OTP" aria-label="seed" aria-describedby="basic-addon1"
         {...register('seed',{required:"Otp is required"})}
         />
       </div>
