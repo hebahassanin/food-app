@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { CiMobile2 } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function ForgetPassword() {
 
@@ -12,7 +14,7 @@ export default function ForgetPassword() {
 
   const onSubmit=async(data)=>{
    try {
-    let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request',data);
+    let response = await axiosInstance.post(USERS_URL.FORGET_PASS,data);
     console.log(response);
     toast.success(response?.data?.message);
     navigate('/reset-pass', {state: {email: data.email}});

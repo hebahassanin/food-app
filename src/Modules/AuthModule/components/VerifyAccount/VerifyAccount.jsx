@@ -5,6 +5,8 @@ import { FaRegEnvelope } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function VerifyAccount() {
   let {register,formState:{errors},handleSubmit}=useForm();
@@ -16,7 +18,7 @@ export default function VerifyAccount() {
 
   let onSubmit =async(data)=>{
     try {
-      let response = await axios.put('https://upskilling-egypt.com:3006/api/v1/Users/verify',data);
+      let response = await axiosInstance.put(USERS_URL.VERIFY,data);
       toast.success('Account verified successfully');
       navigate('/');
 

@@ -13,8 +13,17 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
 import { toast } from 'react-toastify'
+import { axiosInstance } from '../../../../Services/END_POINTS.JS'
+import { USERS_URL } from '../../../../Services/END_POINTS.JS'
+import { useContext } from 'react'
+import { AuthContext } from '../../../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function UsersList() {
+
+  let {logoutUser,userData}= useContext(AuthContext);
+  let navigate = useNavigate();
+
   const [usersList, setUsersList] = useState([]);
 
   // loading
@@ -40,10 +49,13 @@ export default function UsersList() {
   const getAllUsers =async()=>{
     try {
       setIsLoading(true);
-      let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Users/?pageSize=10&pageNumber=1',
-      {headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}}
-      );
-      // console.log(response?.data?.data);
+      let response = await axiosInstance.get(USERS_URL.GET_USERS,{
+        params:{
+          pageSize: 10,
+          pageNumber: 1
+        }
+      });
+      console.log(response?.data?.data);
       setUsersList(response?.data?.data);
       
     } catch (error) {
@@ -54,14 +66,11 @@ export default function UsersList() {
     }
   }
 
-
   // Delete User
   const deleteUser =async()=>{
     try {
       setIsDeleting(true);
-      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Users/${currentUserId}`,
-      {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
-      );
+      let response = await axiosInstance.delete(USERS_URL.DELETE_USERS(currentUserId));
       setShowFormModal(false);
       toast.success("User deleted successfully",{autoClose: 3000})
       getAllUsers();
@@ -75,9 +84,16 @@ export default function UsersList() {
   }
 
   useEffect(()=>{
+    if(!userData) return;
+    if(userData?.userGroup !='SuperAdmin'){
+      logoutUser();
+      navigate('/');
+    }
+
+
     getAllUsers();
 
-  },[])
+  },[userData])
 
   return (
     <>

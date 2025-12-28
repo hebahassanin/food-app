@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { RECIPES_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function RecipeData() {
   const [categoriesList,setCategoriesList]= useState([]);
@@ -46,9 +48,7 @@ export default function RecipeData() {
 
       //----------------Update Recipe---------------
       try {
-        let response = await axios.put(`https://upskilling-egypt.com:3006/api/v1/Recipe/${id}`, recipeData,
-        {headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}}
-        )
+        let response = await axiosInstance.put(RECIPES_URL.UPDATE_RECIPE(id), recipeData);
         toast.success('The Recipe updated successfully', {autoClose: 3000})
         navigate('/dashboard/recipes');
         
@@ -61,9 +61,7 @@ export default function RecipeData() {
     }else{
        // --------------Add Recipe -----------------
       try {
-        let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Recipe/', recipeData,
-        {headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}}
-        )
+        let response = await axiosInstance.post(RECIPES_URL.ADD_RECIPE, recipeData);
         toast.success('The Recipe created successfully', {autoClose: 3000})
         navigate('/dashboard/recipes');
         
@@ -73,14 +71,12 @@ export default function RecipeData() {
       }
 
     }
-
-   
   }
 
   // Get recipeDetails
   const getRecipeDetails =async()=>{
     try{
-      const response = await axios.get(`https://upskilling-egypt.com:3006/api/v1/Recipe/${id}`);
+      const response = await axiosInstance.get(RECIPES_URL.GET_RECIPE_DETAILS(id));
       // setRecipeDetails(response.data);
       // console.log(response.data);
 

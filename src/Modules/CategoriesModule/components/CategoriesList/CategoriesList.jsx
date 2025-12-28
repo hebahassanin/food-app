@@ -13,8 +13,14 @@ import Modal from 'react-bootstrap/Modal';
 import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/DeleteConfirmation'
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { AuthContext } from '../../../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function CategoriesList() {
+
+  let {logoutUser,userData}= useContext(AuthContext);
+  let navigate = useNavigate();
 
   const [categoriesList,setCategoriesList]= useState([]);
   const [categoryId, setCategoryId] = useState(0);
@@ -143,9 +149,15 @@ export default function CategoriesList() {
   }
 
   useEffect(()=>{
+    if(!userData) return;
+    if(userData?.userGroup !='SuperAdmin'){
+      logoutUser();
+      navigate('/');
+    }
+
     getAllCategories();
 
-  },[])
+  },[userData])
 
 
   return (

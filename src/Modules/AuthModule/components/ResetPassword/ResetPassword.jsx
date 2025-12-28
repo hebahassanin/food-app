@@ -8,6 +8,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function ResetPassword() {
 
@@ -28,7 +30,7 @@ export default function ResetPassword() {
   const onSubmit =async(data)=>{
 
     try {
-      let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Reset',data);
+      let response = await axiosInstance.post(USERS_URL.RESET_PASS,data);
       console.log(response);
       toast.success(response.data.message)
       navigate('/login');

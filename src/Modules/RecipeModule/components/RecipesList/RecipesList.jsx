@@ -17,18 +17,27 @@ import recipeImg from '../../../../assets/images/recipeImage.jpg';
 import NoData from '../../../Shared/components/NoData/NoData';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { RECIPES_URL } from '../../../../Services/END_POINTS.JS';
+import { useContext } from 'react';
+import { AuthContext } from '../../../../context/AuthContext';
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { USER_RECIPE_URLS } from '../../../../Services/END_POINTS.JS';
 
 export default function RecipesList() {
+  const {logoutUser,userData}= useContext(AuthContext);
 
   const [recipesList, setRecipesList] = useState([]);
   const [recipeId, setRecipeId] = useState(0);
   const [recipeName, setRecipeName] = useState('');
+  const[favoriteRecipes, setFavoriteRecipes] = useState([]);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
   // to disable button after delete to prevent click again on button
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const [show, setShow] = useState(false);
@@ -40,12 +49,29 @@ export default function RecipesList() {
     setShow(true);
   }
 
-  const getAllRecipes =async()=>{
 
+  // Add favorite Modal
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [favRecipeId, setFavRecipeId] = useState(null);
+  const[favRecipeName, setFavRecipeName] = useState('');
+  const handleAddfav=(recipe)=>{
+    setFavRecipeId(recipe.id);
+    setFavRecipeName(recipe.name);
+    setShowFormModal(true);
+  }
+
+
+  //---- get Recipes-----
+  const getAllRecipes =async()=>{
     try {
       setLoading(true);
-      let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Recipe/?pageSize=10&pageNumber=1',
-    {headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}});
+      let response = await axiosInstance.get(RECIPES_URL.GET_RECIPES,{
+        params:{
+          pageSize: 10,
+          pageNumber: 1
+        }
+      } 
+    );
     console.log(response.data.data);
 
     setRecipesList(response.data.data);
@@ -56,14 +82,13 @@ export default function RecipesList() {
       setLoading(false);
     }
   }
+  
 
  //Delete Recipe
   const deleteRecipe =async()=>{
     try {
       setIsDeleting(true);
-      let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Recipe/${recipeId}`,
-      {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
-      );
+      let response = await axiosInstance.delete(RECIPES_URL.DELETE_RECIPE(recipeId) );
       handleClose();
       toast.success("Recipe deleted successfully",{autoClose: 3000})
       getAllRecipes();
@@ -76,8 +101,46 @@ export default function RecipesList() {
     }
   }
 
+  // addToFavorite
+  let addToFavorite=async(id)=>{
+   try {
+    setIsSubmitting(true)
+    let response = await axiosInstance.post(USER_RECIPE_URLS.CREATE_FAVS,{'recipeId':id})
+    // console.log(response);
+    setFavoriteRecipes(prev => [...prev, id]);
+    setShowFormModal(false);
+    toast.success('add to favorite successfuly',{autoClose: 2000});
+    
+   } catch (error) {
+    toast.error('failed to add to favorite',{autoClose: 2000});
+   }finally{
+    setIsSubmitting(false);
+  }
+  }
+
+  const getAllFavorites =async()=>{
+    try {
+      setLoading(true);
+      let response = await axiosInstance.get(USER_RECIPE_URLS.GET_FAVS,
+        {
+          params:{
+            pageSize: 10,
+            pageNumber:1
+          }
+        });
+    
+        const favIds = response.data.data.map(fav=> fav.recipe.id)
+
+    setFavoriteRecipes(favIds);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(()=>{
     getAllRecipes();
+    getAllFavorites();
   },[])
 
   return (
@@ -89,7 +152,12 @@ export default function RecipesList() {
         <h4>Recipe Table Details</h4>
         <p>You can check all details</p>
       </div>
-      <button className='btn btn-success' onClick={()=> navigate('/dashboard/recipe-data')}>Add New Recipes</button>
+      
+      {userData?.userGroup != 'SystemUser' ?
+      <button className='btn btn-success' onClick={()=> navigate('/dashboard/recipe-data')}>
+        Add New Recipes
+      </button> :''
+      }
     </div>
 
     <Modal show={show} onHide={handleClose}>
@@ -108,6 +176,28 @@ export default function RecipesList() {
            <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
            </>
            ):('Delete this item')} 
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      
+      {/* Modal to add to favorite */}
+      <Modal show={showFormModal} onHide={()=> setShowFormModal(false)} centered>
+      <Modal.Header style={{
+       background: 'linear-gradient(90deg, #fde2e4, #fff)'}} closeButton>
+          <Modal.Title style={{color:"#842029"}} className='fw-bold'>Add To Favorites</Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body className='py-4'>
+         <h6>Are you sure to add <strong>{favRecipeName}</strong> to favorite?</h6> 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" disabled={isSubmitting} onClick={()=>addToFavorite(favRecipeId)}>
+            {isSubmitting?
+            <>Adding 
+            <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+            </>: 'add to favorite'}
+           
           </Button>
         </Modal.Footer>
       </Modal>
@@ -163,8 +253,9 @@ export default function RecipesList() {
             <th scope="col">Actions</th>
           </tr>
         </thead>
+
         <tbody>
-         
+
          {recipesList.map(recipe=>(
             <tr key={recipe?.id}>
             <th scope="row">{recipe?.id}</th>
@@ -184,6 +275,11 @@ export default function RecipesList() {
 
 
             <td>
+             
+            {userData?.userGroup == 'SystemUser' ? 
+            (favoriteRecipes.includes(recipe.id)?
+              ( <FaHeart  color='red' style={{cursor:'pointer'}}/>) :
+            (<FaRegHeart color="red" style={{cursor:'pointer'}} onClick={()=> handleAddfav(recipe)}/>))  :
               <div className="dropdown">
                 <button
                   className="btn p-0 border-0"
@@ -213,6 +309,7 @@ export default function RecipesList() {
                   </li>
                 </ul>
               </div>
+             }
           </td>
           </tr>
 

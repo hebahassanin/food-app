@@ -17,6 +17,7 @@ import UsersList from './Modules/UsersModule/components/UsersList/UsersList';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Modules/Shared/components/ProtectedRoute/ProtectedRoute';
 import ChangePassword from './Modules/AuthModule/components/ChangePassword/ChangePassword';
+import FavoriteList from './Modules/Favorites/components/FavoriteList/FavoriteList';
 
 function App() {
 
@@ -47,7 +48,8 @@ function App() {
           {path:"categories",element:<CategoriesList/>},
           {path:"category-data",element:<CategoryData/>},
           {path:"users",element:<UsersList/>},
-          {path:"change-pass",element:<ChangePassword/>}
+          {path:"change-pass",element:<ChangePassword/>},
+          {path:"favorite",element:<FavoriteList/>}
         ]
       }
     ])

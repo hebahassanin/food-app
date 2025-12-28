@@ -7,7 +7,8 @@ import { FaEye } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function Register() {
   let {register, formState:{errors},handleSubmit, watch}= useForm();
@@ -20,7 +21,7 @@ export default function Register() {
 
   const onSubmit=async(data)=>{
     try {
-      let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Register',data)
+      let response = await axiosInstance.post(USERS_URL.REGISTER,data)
       toast.success('Create User successfully!');
       // console.log(data);
       navigate('/verify-account',{state:{email:data.email}});

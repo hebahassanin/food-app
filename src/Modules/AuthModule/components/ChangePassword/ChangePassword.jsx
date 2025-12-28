@@ -4,13 +4,14 @@ import { TbLockPassword } from "react-icons/tb";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function ChangePassword() {
 
-  let{register,formState:{errors},handleSubmit,watch}=useForm();
+  let{register,formState:{errors,isSubmitting},handleSubmit,watch}=useForm();
 
    // Show and hide password with icon
    const [showPassword, setShowPassword]=useState(false);
@@ -23,8 +24,7 @@ export default function ChangePassword() {
 
   const onSubmit =async(data)=>{
     try {
-      let response = await axios.put('https://upskilling-egypt.com:3006/api/v1/Users/ChangePassword',data,
-      {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+      let response = await axiosInstance.put(USERS_URL.CHANG_PASS,data
       );
       toast.success('Password has been updated successfully');
       navigate('/dashboard');
@@ -85,7 +85,14 @@ export default function ChangePassword() {
       </div>
       {errors.confirmNewPassword && <div className='alert alert-danger p-2'>{errors.confirmNewPassword.message}</div>}
 
-      <button className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>Change Password</button>
+      <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>
+        {isSubmitting ?(
+          <>
+          Change Password
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):(' Change Password')}
+       </button>
       
     </form>
     </>

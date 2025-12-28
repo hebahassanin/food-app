@@ -4,12 +4,13 @@ import { useForm } from 'react-hook-form';
 import { CiMobile2 } from "react-icons/ci";
 import { TbLockPassword } from "react-icons/tb";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useContext } from 'react';
 import { AuthContext} from '../../../../context/AuthContext';
+import { axiosInstance } from '../../../../Services/END_POINTS.JS';
+import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function Login() {
 
@@ -24,11 +25,11 @@ export default function Login() {
 
   const onSubmit =async(data)=>{
     try {
-      let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Login',data);
+      let response = await axiosInstance.post(USERS_URL.LOGIN,data);
       localStorage.setItem("token",response?.data?.token);
       saveUserData();
 
-      toast.success('Wow logged successfully!',
+      toast.success('Welcome to the Food App!',
       {
         autoClose: 3000,
       })
