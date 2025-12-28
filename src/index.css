@@ -101,3 +101,15 @@
     width: calc(100% - 80px);
     transition: 0.3s;
   }
+
+  /* notfound */
+  .notfound-bg{
+    position: fixed;
+    top:0;
+    right: 0;
+  }
+  .notfound-bg1{
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+  }
