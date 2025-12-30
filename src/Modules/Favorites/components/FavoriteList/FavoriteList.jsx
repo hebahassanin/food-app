@@ -84,12 +84,6 @@ export default function FavoriteList() {
     }
 
     useEffect(()=>{
-      // if(!userData) return;
-      //   if(userData?.userGroup != 'SystemUser'){
-      //       logoutUser();
-      //       navigate('/');
-      //   } 
-
         getAllFavorites();
     },[])
 
@@ -98,6 +92,13 @@ export default function FavoriteList() {
     <>
 
     <Header title={"Favorite Items"} description={"You can now add your items that any user can order it from the Application and you can edit"} imgUrl={headerImg1}/>
+
+    <div className=" m-3 d-flex justify-content-between align-items-center p-4 rounded-3">
+      <div className="caption">
+        <h4>Favorite Items</h4>
+        <p>You can check all details</p>
+      </div>
+      </div>
 
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
@@ -133,12 +134,12 @@ export default function FavoriteList() {
 
             <div className="col-md-4 mb-4" key={fav?.id}>
               <div className="card position-relative">
-                <img  className="card-img-top" style={{height: '150px',width:'100%', objectFit:'cover', borderRadius:'6px'}}  
+                <img  className="card-img-top " style={{height: '150px',width:'100%', objectFit:'cover', borderRadius:'6px'}}  
                 src={fav?.recipe?.imagePath ?`${ImageURL}${fav?.recipe?.imagePath}`: recipeImg}
                   alt={fav?.recipe?.name}/>
                   <FaHeart style={{position:'absolute',top:'10px',right:'10px',fontSize:'1.5rem',cursor:'pointer',color:'red'}}  color='red' onClick={()=> handleShow(fav)} />
-                <div className="card-body">
-                  <h5 className="card-title">{fav?.recipe?.name}  </h5>
+                <div className="card-body p-4">
+                  <h4 className="card-title fw-bold">{fav?.recipe?.name}  </h4>
                   <p className="card-text">{fav?.recipe?.description} </p>
                 </div>
               </div>

@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../../../Services/END_POINTS.JS';
 import { USERS_URL } from '../../../../Services/END_POINTS.JS';
+import Header from '../../../Shared/components/Header/Header';
 
 export default function ChangePassword() {
 
@@ -38,64 +39,70 @@ export default function ChangePassword() {
 
   return (
     <>
-      <div className="title m-5">
-        <h4 className='fw-bold'>Change Password</h4>
+    <Header title='Change Password'/>
+      <div className="title mt-5 text-center">
+        <h2 className='fw-bold'>Change Password</h2>
         <p className='text-muted'>Change Password! Please enter your details</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className='m-5 w-75'>
+     <div className='d-flex justify-content-center'>
 
-      <div className="input-group mb-3">
-        <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
-        <input type={showPassword ? "text" :"password"}
-        {...register('oldPassword',{required:'password is required' })}
-         className="form-control" placeholder="Enter Your Password" aria-label="oldPassword" aria-describedby="basic-addon1"/>
-         <span className="input-group-text" onClick={()=>setShowPassword(!showPassword)} 
-                style={{cursor:"pointer"}}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </span>
-      </div>
-      {errors.oldPassword && <div className='alert alert-danger p-2'>{errors.oldPassword.message}</div>}
+     <form onSubmit={handleSubmit(onSubmit)} className='m-5' style={{width:"600px"}}>
 
-
-
-      <div className="input-group mb-3">
-        <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
-        <input type={showNewPassword ? "text" :"password"}
-        {...register('newPassword',{required:'password is required' })}
-         className="form-control" placeholder="Enter Your New Password" aria-label="newPassword" aria-describedby="basic-addon1"/>
-         <span className="input-group-text" onClick={()=>setShowNewPassword(!showNewPassword)} 
-                style={{cursor:"pointer"}}>
-                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
-          </span>
-      </div>
-      {errors.newPassword && <div className='alert alert-danger p-2'>{errors.newPassword.message}</div>}
+<div className="input-group mb-3">
+  <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
+  <input type={showPassword ? "text" :"password"}
+  {...register('oldPassword',{required:'password is required' })}
+   className="form-control" placeholder="Enter Your Password" aria-label="oldPassword" aria-describedby="basic-addon1"/>
+   <span className="input-group-text" onClick={()=>setShowPassword(!showPassword)} 
+          style={{cursor:"pointer"}}>
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+</div>
+{errors.oldPassword && <div className='alert alert-danger p-2'>{errors.oldPassword.message}</div>}
 
 
-      <div className="input-group mb-3">
-        <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
-        <input type={showConfirmPassword ? "text" :"password"}
-        {...register('confirmNewPassword',{required:'password is required' ,
-          validate: value => value === password || "Password do not match"
-      })}
-         className="form-control" placeholder="Confirm Your New Password" aria-label="confirmPassword" aria-describedby="basic-addon1"/>
-         <span className="input-group-text" onClick={()=>setShowConfirmPassword(!showConfirmPassword)} 
-                style={{cursor:"pointer"}}>
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-          </span>
-      </div>
-      {errors.confirmNewPassword && <div className='alert alert-danger p-2'>{errors.confirmNewPassword.message}</div>}
 
-      <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>
-        {isSubmitting ?(
-          <>
-          Change Password
-          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
-          </>
-        ):(' Change Password')}
-       </button>
-      
-    </form>
+<div className="input-group mb-3">
+  <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
+  <input type={showNewPassword ? "text" :"password"}
+  {...register('newPassword',{required:'password is required' })}
+   className="form-control" placeholder="Enter Your New Password" aria-label="newPassword" aria-describedby="basic-addon1"/>
+   <span className="input-group-text" onClick={()=>setShowNewPassword(!showNewPassword)} 
+          style={{cursor:"pointer"}}>
+            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+</div>
+{errors.newPassword && <div className='alert alert-danger p-2'>{errors.newPassword.message}</div>}
+
+
+<div className="input-group mb-3">
+  <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>
+  <input type={showConfirmPassword ? "text" :"password"}
+  {...register('confirmNewPassword',{required:'password is required' ,
+    validate: value => value === password || "Password do not match"
+})}
+   className="form-control" placeholder="Confirm Your New Password" aria-label="confirmPassword" aria-describedby="basic-addon1"/>
+   <span className="input-group-text" onClick={()=>setShowConfirmPassword(!showConfirmPassword)} 
+          style={{cursor:"pointer"}}>
+            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+</div>
+{errors.confirmNewPassword && <div className='alert alert-danger p-2'>{errors.confirmNewPassword.message}</div>}
+
+<button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>
+  {isSubmitting ?(
+    <>
+    Change Password
+    <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+    </>
+  ):(' Change Password')}
+ </button>
+
+</form>
+
+
+     </div>
     </>
   )
 }

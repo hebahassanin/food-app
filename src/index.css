@@ -45,12 +45,52 @@
 }
 
 
-/*Header */
+/*---------------------------------------Header------------------------- */
 .bg-header{
     background: url('./assets/images/circls55.svg') no-repeat left ,rgb(0, 146, 71);
 }
 
+/* Animation on title and desc in header */
+@keyframes slideInLeft {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .header-title {
+    animation: slideInLeft 2s ease-out forwards;
+  }
+  
+  .header-desc {
+    animation: slideInLeft 2.5s ease-out forwards;
+  }
 
+/* Animation on img in headers */
+ @keyframes softPulse {
+    0% {
+      transform: translateY(0);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translateY(-10px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.85;
+    }
+  }
+  .header-image {
+    animation: softPulse 2.8s ease-in-out infinite;
+  }
+  
+
+  /* sidebar */
 .sidebar-container .ps-sidebar-root{
     border-right: none;
 }
@@ -74,10 +114,6 @@
 .categories-container{
     background-color: rgba(240, 255, 239, 1);
 }
-
-/* .layout {
-    display: flex;
-  } */
   
   /* sidebar fixed */
   .sidebar-container {
@@ -113,3 +149,50 @@
     bottom: 20px;
     right: 0;
   }
+
+  /* Table */
+  .table tbody tr>td,
+  .table tbody tr>th{
+    transition: background-color 0.3s ease;
+  }
+  .table tbody tr:hover > td,
+  .table tbody tr:hover >th
+   {
+    background-color: #1ab364 !important;
+    /* color: #009247; */
+    cursor: pointer;
+  }
+
+  .table tbody tr img {
+  transition: transform 0.3s ease; 
+  border-radius: 6px; 
+}
+
+
+.table tbody tr:hover img{
+  transform: scale(1.2); 
+}
+
+
+/* Favorite list */
+.card {
+  overflow: hidden; 
+  border-radius: 6px; 
+}
+.card-img-top {
+  transition: transform 0.3s ease; 
+  border-radius: 6px;
+}
+.card:hover .card-img-top {
+  transform: scale(1.1); 
+}
+
+.card-body {
+  background-color: rgba(177, 199, 177, 0.2); 
+  padding: 10px;
+  border-radius: 0 0 6px 6px; 
+}
+
+
+
+  

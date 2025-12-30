@@ -242,10 +242,10 @@ export default function RecipesList() {
           </div>
           )        
           :recipesList.length >0 ?(
-      <table className="table table-striped m-3">
+      <table className="table table-striped m-3 recipes-table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">ID</th>
             <th scope="col">Recipe Name</th>
             <th scope="col">Recipe Image</th>
             <th scope="col">Price</th>

@@ -231,7 +231,7 @@ export default function CategoriesList() {
       <table className="table table-striped m-3">
         <thead className='table-secondary'>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">ID</th>
             <th scope="col">Category Name</th>
             <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
