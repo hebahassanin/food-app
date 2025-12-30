@@ -15,14 +15,8 @@ import DeleteConfirmation from '../../../Shared/components/DeleteConfirmation/De
 import { toast } from 'react-toastify'
 import { axiosInstance } from '../../../../Services/END_POINTS.JS'
 import { USERS_URL } from '../../../../Services/END_POINTS.JS'
-import { useContext } from 'react'
-import { AuthContext } from '../../../../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 export default function UsersList() {
-
-  let {logoutUser,userData}= useContext(AuthContext);
-  let navigate = useNavigate();
 
   const [usersList, setUsersList] = useState([]);
 
@@ -53,7 +47,8 @@ export default function UsersList() {
         params:{
           pageSize: 10,
           pageNumber: 1
-        }
+        }, headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
+
       });
       console.log(response?.data?.data);
       setUsersList(response?.data?.data);
@@ -70,7 +65,8 @@ export default function UsersList() {
   const deleteUser =async()=>{
     try {
       setIsDeleting(true);
-      let response = await axiosInstance.delete(USERS_URL.DELETE_USERS(currentUserId));
+      let response = await axiosInstance.delete(USERS_URL.DELETE_USERS(currentUserId),
+      { headers: {Authorization:`Bearer ${localStorage.getItem('token')}`} });
       setShowFormModal(false);
       toast.success("User deleted successfully",{autoClose: 3000})
       getAllUsers();
@@ -84,16 +80,9 @@ export default function UsersList() {
   }
 
   useEffect(()=>{
-    if(!userData) return;
-    if(userData?.userGroup !='SuperAdmin'){
-      logoutUser();
-      navigate('/');
-    }
-
-
     getAllUsers();
 
-  },[userData])
+  },[])
 
   return (
     <>

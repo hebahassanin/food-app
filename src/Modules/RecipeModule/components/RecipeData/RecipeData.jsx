@@ -48,7 +48,9 @@ export default function RecipeData() {
 
       //----------------Update Recipe---------------
       try {
-        let response = await axiosInstance.put(RECIPES_URL.UPDATE_RECIPE(id), recipeData);
+        let response = await axiosInstance.put(RECIPES_URL.UPDATE_RECIPE(id), recipeData,
+        {headers: {Authorization:` Bearer ${localStorage.getItem('token')}`}
+      });
         toast.success('The Recipe updated successfully', {autoClose: 3000})
         navigate('/dashboard/recipes');
         
@@ -61,7 +63,9 @@ export default function RecipeData() {
     }else{
        // --------------Add Recipe -----------------
       try {
-        let response = await axiosInstance.post(RECIPES_URL.ADD_RECIPE, recipeData);
+        let response = await axiosInstance.post(RECIPES_URL.ADD_RECIPE, recipeData,
+          {headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
+        });
         toast.success('The Recipe created successfully', {autoClose: 3000})
         navigate('/dashboard/recipes');
         
@@ -76,7 +80,9 @@ export default function RecipeData() {
   // Get recipeDetails
   const getRecipeDetails =async()=>{
     try{
-      const response = await axiosInstance.get(RECIPES_URL.GET_RECIPE_DETAILS(id));
+      const response = await axiosInstance.get(RECIPES_URL.GET_RECIPE_DETAILS(id),
+      {headers: {Authorization:` Bearer ${localStorage.getItem('token')}`}
+    });
       // setRecipeDetails(response.data);
       // console.log(response.data);
 
@@ -147,8 +153,8 @@ export default function RecipeData() {
        />
        {errors.name && <div className='text-danger'>{errors.name.message}</div>}
 
-      <select  {...register('tagId',{required: 'Tags is required'})} className="form-control my-2">
-       <option disabled>choose</option>
+      <select defaultValue="1" {...register('tagId',{required: 'Tags is required'})} className="form-control my-2">
+       <option className='text-muted' disabled value="1">choose</option>
         {tagsList.map(tag =>
         <option key={tag?.id} value={tag?.id}>{tag?.name}</option>
           )}
@@ -161,8 +167,8 @@ export default function RecipeData() {
       />
       {errors.price &&<div className='text-danger'>{errors.price.message}</div>}
 
-      <select {...register('categoriesIds',{required:'categoriesIds is required'})} className="form-control my-2">
-        <option disabled>choose</option>
+      <select defaultValue="1" {...register('categoriesIds',{required:'categoriesIds is required'})} className="form-control my-2">
+        <option className='text-muted' disabled value="1">choose</option>
       {categoriesList.map(category =>
         <option key={category?.id} value={category?.id}>{category?.name}</option>
           )}

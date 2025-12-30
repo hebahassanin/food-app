@@ -51,7 +51,7 @@ export default function FavoriteList() {
             params:{
               pageSize: 10,
               pageNumber:1
-            }
+            },headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
           });
       console.log(response.data.data);
   
@@ -68,7 +68,8 @@ export default function FavoriteList() {
     let removeFavorite= async()=>{
       try {
         setIsDeleting(true);
-        let response = await axiosInstance.delete(USER_RECIPE_URLS.DELETE_FAVS(selectedFav.id));
+        let response = await axiosInstance.delete(USER_RECIPE_URLS.DELETE_FAVS(selectedFav.id),
+        {headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}});
         console.log(response);
         handleClose();
         toast.success('Remove from favorite',{autoClose: 2000})
@@ -83,14 +84,14 @@ export default function FavoriteList() {
     }
 
     useEffect(()=>{
-      if(!userData) return;
-        if(userData?.userGroup != 'SystemUser'){
-            logoutUser();
-            navigate('/');
-        } 
+      // if(!userData) return;
+      //   if(userData?.userGroup != 'SystemUser'){
+      //       logoutUser();
+      //       navigate('/');
+      //   } 
 
         getAllFavorites();
-    },[userData])
+    },[])
 
 
   return (

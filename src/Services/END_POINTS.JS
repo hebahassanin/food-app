@@ -6,7 +6,8 @@ export const ImageURL="https://upskilling-egypt.com:3006/";
 
 export const axiosInstance = axios.create({
     baseURL,
-    headers: {Authorization:localStorage.getItem('token')}
+    // headers: {Authorization:localStorage.getItem('token')}
+    // headers: {Authorization:` Bearer ${localStorage.getItem('token')}`}
 });
 
 

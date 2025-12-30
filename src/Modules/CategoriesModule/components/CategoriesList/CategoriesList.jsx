@@ -149,15 +149,9 @@ export default function CategoriesList() {
   }
 
   useEffect(()=>{
-    if(!userData) return;
-    if(userData?.userGroup !='SuperAdmin'){
-      logoutUser();
-      navigate('/');
-    }
-
     getAllCategories();
 
-  },[userData])
+  },[])
 
 
   return (

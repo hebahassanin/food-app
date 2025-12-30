@@ -24,13 +24,14 @@ export default function ChangePassword() {
 
   const onSubmit =async(data)=>{
     try {
-      let response = await axiosInstance.put(USERS_URL.CHANG_PASS,data
+      let response = await axiosInstance.put(USERS_URL.CHANG_PASS,data,
+        {headers: {Authorization:` Bearer ${localStorage.getItem('token')}`}}
       );
-      toast.success('Password has been updated successfully');
+      toast.success('Password has been updated successfully',{autoClose:2000});
       navigate('/dashboard');
       
     } catch (error) {
-      toast.error('Falied to updated your password');
+      toast.error('Falied to updated your password',{autoClose:2000});
       
     }
   }

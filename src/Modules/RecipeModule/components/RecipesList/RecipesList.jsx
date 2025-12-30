@@ -69,7 +69,7 @@ export default function RecipesList() {
         params:{
           pageSize: 10,
           pageNumber: 1
-        }
+        }, headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
       } 
     );
     console.log(response.data.data);
@@ -88,7 +88,8 @@ export default function RecipesList() {
   const deleteRecipe =async()=>{
     try {
       setIsDeleting(true);
-      let response = await axiosInstance.delete(RECIPES_URL.DELETE_RECIPE(recipeId) );
+      let response = await axiosInstance.delete(RECIPES_URL.DELETE_RECIPE(recipeId),
+      {headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}} );
       handleClose();
       toast.success("Recipe deleted successfully",{autoClose: 3000})
       getAllRecipes();
@@ -105,7 +106,8 @@ export default function RecipesList() {
   let addToFavorite=async(id)=>{
    try {
     setIsSubmitting(true)
-    let response = await axiosInstance.post(USER_RECIPE_URLS.CREATE_FAVS,{'recipeId':id})
+    let response = await axiosInstance.post(USER_RECIPE_URLS.CREATE_FAVS,{'recipeId':id},
+    {headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}})
     // console.log(response);
     setFavoriteRecipes(prev => [...prev, id]);
     setShowFormModal(false);
@@ -126,7 +128,7 @@ export default function RecipesList() {
           params:{
             pageSize: 10,
             pageNumber:1
-          }
+          },headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
         });
     
         const favIds = response.data.data.map(fav=> fav.recipe.id)
