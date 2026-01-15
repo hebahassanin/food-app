@@ -47,7 +47,7 @@
 
 /*---------------------------------------Header------------------------- */
 .bg-header{
-    background: url('./assets/images/circls55.svg') no-repeat left ,rgb(0, 146, 71);
+    background: url('./assets/images/circls55.svg') no-repeat left ,#009247;
 }
 
 /* Animation on title and desc in header */
@@ -111,10 +111,22 @@
 
 .home-container,
 .recipes-container,
-.categories-container{
+.categories-container,
+.header-favorite{
     background-color: rgba(240, 255, 239, 1);
 }
-  
+
+/* @media (max-width: 767px) {
+  .sidebar-container {
+    pointer-events: none;
+  }
+
+  .sidebar-container * {
+    pointer-events: auto;
+  }
+}
+   */
+
   /* sidebar fixed */
   .sidebar-container {
     position: fixed;
@@ -124,6 +136,19 @@
     width: 250px;
     z-index: 1000;
   }
+
+
+.sidebar-container.collapsed {
+  /* transform: translateX(-100%); */
+  width: 80px;
+  pointer-events: auto;   /* 🔥 أهم سطر */
+}
+
+/* لما يبقى مفتوح */
+.sidebar-container.open {
+  width: 250px;
+  pointer-events: auto;
+}
   
   /* content*/
   .main-content {
@@ -151,6 +176,10 @@
   }
 
   /* Table */
+  .table thead tr th{
+    background: #0e7c43;
+    color:#fff;
+  }
   .table tbody tr>td,
   .table tbody tr>th{
     transition: background-color 0.3s ease;
@@ -173,17 +202,24 @@
   transform: scale(1.2); 
 }
 
+.custom-thead th{
+  padding: 17px;
+  white-space: nowrap;
+}
+
 
 /* Favorite list */
 .card {
   overflow: hidden; 
   border-radius: 6px; 
+  transition: transform 0.5s ease; 
+
 }
 .card-img-top {
-  transition: transform 0.3s ease; 
+  transition: transform 0.5s ease; 
   border-radius: 6px;
 }
-.card:hover .card-img-top {
+.card.favoriteCard:hover {
   transform: scale(1.1); 
 }
 
@@ -191,8 +227,33 @@
   background-color: rgba(177, 199, 177, 0.2); 
   padding: 10px;
   border-radius: 0 0 6px 6px; 
+
 }
 
+
+
+
+@media (max-width: 767px) {
+
+  .mobile-modal {
+    margin-top: 15vh;   
+  }
+}
+
+@media (max-width: 768px) {
+  .recipe-form input,
+  .recipe-form select,
+  .recipe-form textarea
+  {
+    min-width: 200px; /* مثلاً يبقى فيه Margin صغير من الجانبين */
+  }
+}
+
+@media (max-width: 768px) {
+  .recipe-form .btns {
+    justify-content: center !important;
+  }
+}
 
 
   

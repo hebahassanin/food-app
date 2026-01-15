@@ -11,7 +11,7 @@ import { axiosInstance } from '../../../../Services/END_POINTS.JS';
 import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function Register() {
-  let {register, formState:{errors},handleSubmit, watch}= useForm();
+  let {register, formState:{errors,isSubmitting},handleSubmit, watch}= useForm();
   let navigate = useNavigate();
 
   // Show and hide password with icon
@@ -22,12 +22,18 @@ export default function Register() {
   const onSubmit=async(data)=>{
     try {
       let response = await axiosInstance.post(USERS_URL.REGISTER,data)
-      toast.success('Create User successfully!');
+      toast.success('Create User successfully!',
+      {
+        autoClose:3000
+      });
       // console.log(data);
       navigate('/verify-account',{state:{email:data.email}});
       
     } catch (error) {
-      toast.error('Faild to create account');
+      toast.error(error.response?.data?.message ,
+      {
+        autoClose: 3000,
+      });
     }
     
   }
@@ -134,7 +140,15 @@ export default function Register() {
             <Link className='text-decoration-none green-color' to="/login">Login Now?</Link>
         </div>
 
-        <button className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-3'>Register</button>
+        <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-3'>
+        {isSubmitting ?(
+          <>
+          Register
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):('Register')}
+          
+          </button>
       </form>
     </>
   )

@@ -8,7 +8,7 @@ export default function NavBar() {
   console.log(userData);
   return (
     <>
-     <nav className="navbar rounded-3 mx-3" style={{ backgroundColor: '#f8f9fa' }}>
+     <nav className="navbar rounded-3 mx-2" style={{ backgroundColor: '#f8f9fa' }}>
         <div
           className="container-fluid"
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

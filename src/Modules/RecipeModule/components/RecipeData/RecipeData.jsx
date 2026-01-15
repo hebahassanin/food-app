@@ -146,8 +146,8 @@ export default function RecipeData() {
      <SectionHeader title={id? "Update The Recipes":"Fill The Recipes !"} subtitle={"you can now fill the meals easily using the table and form , click here and sill it with the table !"}
       onButtonClick={()=> navigate('/dashboard/recipes')} buttonText={"All Recipes"}/>
 
-      <form className='w-75 p-5 m-auto' onSubmit={handleSubmit(onSubmit)}>
-      <input type="text" className="form-control my-2" placeholder="Recipe Name" aria-label="name"
+      <form className='w-75 recipe-form p-5 m-md-auto mx-1' onSubmit={handleSubmit(onSubmit)}>
+      <input type="text"  className="form-control my-2" placeholder="Recipe Name" aria-label="name"
        aria-describedby="basic-addon1"
        {...register('name',{required: 'Recipe Name is required'})}
        />

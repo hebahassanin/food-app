@@ -52,3 +52,8 @@ export const USER_RECIPE_URLS ={
     DELETE_FAVS: (id)=> `/userRecipe/${id}`,
     CREATE_FAVS: `/userRecipe/`,
 }
+
+//------------------------Tags------------------
+export const TAGS_URLS={
+    GET_TAGS:`/tag/`,
+}

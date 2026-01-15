@@ -47,7 +47,7 @@ export default function ChangePassword() {
 
      <div className='d-flex justify-content-center'>
 
-     <form onSubmit={handleSubmit(onSubmit)} className='m-5' style={{width:"600px"}}>
+     <form onSubmit={handleSubmit(onSubmit)} className='m-md-5 m-2' style={{width:"600px"}}>
 
 <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1"><TbLockPassword size={18}/></span>

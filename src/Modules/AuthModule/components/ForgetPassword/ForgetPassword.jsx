@@ -9,19 +9,25 @@ import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function ForgetPassword() {
 
-  let {register,formState:{errors},handleSubmit}= useForm();
+  let {register,formState:{errors, isSubmitting},handleSubmit}= useForm();
   let navigate= useNavigate();
 
   const onSubmit=async(data)=>{
    try {
     let response = await axiosInstance.post(USERS_URL.FORGET_PASS,data);
     console.log(response);
-    toast.success(response?.data?.message);
+    toast.success(response?.data?.message,
+      {
+        autoClose: 3000
+      });
     navigate('/reset-pass', {state: {email: data.email}});
 
     
    } catch (error) {
-    toast.error(error.response.data.message);
+    toast.error(error.response.data.message,
+      {
+        autoClose: 3000
+      });
     
    }
 
@@ -49,7 +55,15 @@ export default function ForgetPassword() {
         </div>
         {errors.email && <div className='alert alert-danger p-2'>{errors.email.message}</div>}
 
-        <button className='btn button-bg text-white fs-5 fw-bold w-100 py-2'>Submit</button>
+        <button disabled={isSubmitting} className='btn button-bg text-white fs-5 fw-bold w-100 py-2'>
+        {isSubmitting ?(
+          <>
+          Submit
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):('Submit')}
+          
+          </button>
       </form>
 
       

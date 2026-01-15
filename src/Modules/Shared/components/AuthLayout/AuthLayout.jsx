@@ -7,7 +7,7 @@ export default function AuthLayout() {
     <>
     <div className='auth-container'>
       <div className="container-fluid bg-overlay">
-        <div className="row vh-100 justify-content-center align-items-center">
+        <div className="row min-vh-100 justify-content-center align-items-center">
           <div className="col-lg-6 col-md-7 bg-white p-5 rounded-3">
             <div className="form-container">
               <div className="logo-container text-center">
@@ -15,8 +15,6 @@ export default function AuthLayout() {
               </div>
 
               <Outlet/>
-
-
             </div>
           </div>
         </div>

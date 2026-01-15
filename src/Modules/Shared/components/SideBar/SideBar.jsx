@@ -14,6 +14,9 @@ import { AuthContext } from '../../../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import { MdFavoriteBorder } from "react-icons/md";
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+
 export default function SideBar({isCollapsed, setIsCollapsed}) {
 
   const {logoutUser,userData}= useContext(AuthContext);
@@ -29,45 +32,50 @@ export default function SideBar({isCollapsed, setIsCollapsed}) {
   const {pathname}=useLocation();
 
   const toggleCollapse =()=>{
-    setIsCollapsed(!isCollapsed);
+    if(window.innerWidth >= 768){
+      setIsCollapsed(!isCollapsed);
+   }
+    
   }
+
+  
 
   return (
     <>
-    <div className="sidebar-container">
+    <div className={`sidebar-container ${isCollapsed? 'collapsed': 'open'} `}>
     <Sidebar collapsed={isCollapsed}>
       <Menu>
         <div className="img py-4">
          <img className='w-100' onClick={toggleCollapse} src={logo} alt='logo'/>
         </div>
         
-        <MenuItem component={<Link to="/dashboard"/>} icon={<IoMdHome />} className={`${pathname === '/dashboard'? "active": null}`}>Home</MenuItem>
+        <MenuItem component={<Link to="/dashboard"/>} title='Home' icon={<IoMdHome />} className={`${pathname === '/dashboard'? "active": null}`}>Home</MenuItem>
 
         {userData?.userGroup != 'SystemUser' ?
           <MenuItem component={<Link to="/dashboard/users"/>}
-          icon={<HiUsers />} className={`${pathname === '/dashboard/users'? "active": null}`}>
+          icon={<HiUsers />} title='Users' className={`${pathname === '/dashboard/users'? "active": null}`}>
             Users
           </MenuItem> :''
         }
        
-        <MenuItem component={<Link to="/dashboard/recipes"/>} icon={<FaQrcode />} className={`${pathname === '/dashboard/recipes'? "active": null}`}>Recipes</MenuItem>
+        <MenuItem component={<Link to="/dashboard/recipes"/>} title='Recipes' icon={<FaQrcode />} className={`${pathname === '/dashboard/recipes'? "active": null}`}>Recipes</MenuItem>
         
         {userData?.userGroup == 'SystemUser' ?
-         <MenuItem component={<Link to="/dashboard/favorite"/>}
+         <MenuItem component={<Link to="/dashboard/favorite"/>} title='Favorites'
           icon={<MdFavoriteBorder size="20" />} className={`${pathname === '/dashboard/favorite'? "active": null}`}>
             Favorites
           </MenuItem> : ''
         }
 
         {userData?.userGroup != 'SystemUser' ?
-        <MenuItem component={<Link to="/dashboard/categories"/>}
+        <MenuItem component={<Link to="/dashboard/categories"/>} title='Categories'
          icon={<LuCalendarDays />} className={`${pathname === '/dashboard/categories'? "active": null}`}>
           Categories
         </MenuItem> : ''
         }
         
-        <MenuItem component={<Link to="/dashboard/change-pass" />} icon={<FaUnlockAlt />}>Change Password</MenuItem>
-        <MenuItem onClick={handleLogout} icon={<IoLogOut />}>Logout</MenuItem>
+        <MenuItem component={<Link to="/dashboard/change-pass" />} title='Change Password' icon={<FaUnlockAlt />}>Change Password</MenuItem>
+        <MenuItem onClick={handleLogout} title='Logout' icon={<IoLogOut />}>Logout</MenuItem>
       </Menu>
     </Sidebar>
     </div>

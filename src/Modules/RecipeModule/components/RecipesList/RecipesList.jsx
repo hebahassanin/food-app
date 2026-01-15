@@ -23,6 +23,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../../../context/AuthContext';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { USER_RECIPE_URLS } from '../../../../Services/END_POINTS.JS';
+import { TAGS_URLS } from '../../../../Services/END_POINTS.JS';
 
 export default function RecipesList() {
   const {logoutUser,userData}= useContext(AuthContext);
@@ -31,7 +32,23 @@ export default function RecipesList() {
   const [recipeId, setRecipeId] = useState(0);
   const [recipeName, setRecipeName] = useState('');
   const[favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [categoriesList,setCategoriesList]= useState([]);
+
+  const [nameValue, setNameValue] = useState("");
+  const [tagValue, setTagValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
+
+
+  //state to Pagination
+  const[arrayOfPages, setArrayOfPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+
   const navigate = useNavigate();
+
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   const [loading, setLoading] = useState(false);
 
@@ -60,19 +77,33 @@ export default function RecipesList() {
     setShowFormModal(true);
   }
 
+  // view Modal
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+  const handleViewRecipe = (recipe) => {
+    setSelectedRecipe(recipe);
+    setShowViewModal(true);
+};
+
+
 
   //---- get Recipes-----
-  const getAllRecipes =async()=>{
+  const getAllRecipes =async(pageNo,pageSize, name,tag,category)=>{
     try {
       setLoading(true);
       let response = await axiosInstance.get(RECIPES_URL.GET_RECIPES,{
         params:{
-          pageSize: 10,
-          pageNumber: 1
+          pageSize: pageSize,
+          pageNumber: pageNo,
+          name: name,
+          tagId:tag,
+          categoryId: category,
         }, headers: {Authorization:`Bearer ${localStorage.getItem('token')}`}
       } 
     );
     console.log(response.data.data);
+    setArrayOfPages(Array(response.data.totalNumberOfPages).fill().map((_,i)=> i+1));
 
     setRecipesList(response.data.data);
       
@@ -136,20 +167,88 @@ export default function RecipesList() {
     setFavoriteRecipes(favIds);
       
     } catch (error) {
+      // console.log(error);
+      toast.error(error)
+    }
+  }
+
+  const getTags =async()=>{
+    try {
+      const response = await axiosInstance.get(TAGS_URLS.GET_TAGS,{
+        headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}
+      });
+
+      console.log(response?.data);
+      setTags(response?.data);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  //  getAllCategories
+  const getAllCategories =async()=>{
+    try {
+      
+      let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Category/',{
+      headers: {Authorization: `Bearer ${localStorage.getItem('token')}`},
+      params:{
+        pageSize: 10,
+        pageNumber: 1
+      }}
+      );
+      console.log(response.data.data);
+      setCategoriesList(response?.data?.data);
+      
+    } catch (error) {
       console.log(error);
     }
   }
 
+  const getNameValue=(input)=>{
+    setNameValue(input.target.value);
+    setCurrentPage(1);
+    getAllRecipes(1,pageSize, input.target.value,tagValue,categoryValue);
+
+  }
+
+  const getTagValue=(input)=>{
+    // alert("tagchanged");
+    setTagValue(input.target.value);
+    setCurrentPage(1);
+    getAllRecipes(1,pageSize,nameValue ,input.target.value,categoryValue);
+
+  }
+
+  const getCategoryValue=(input)=>{
+    // alert("catchanged");
+    setCategoryValue(input.target.value);
+    setCurrentPage(1);
+    getAllRecipes(1,pageSize,nameValue ,tagValue,input.target.value);
+
+  }
+
+
   useEffect(()=>{
-    getAllRecipes();
+    getAllRecipes(currentPage, pageSize);
+  },[currentPage]);
+
+  useEffect(()=>{
+    // getAllRecipes(currentPage, pageSize);
     getAllFavorites();
+    getTags();
+    getAllCategories();
   },[])
+
+  const filteredRecipes = recipesList.filter(recipe =>
+    recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
     <Header title={'Recipes Items'} description={'You can now add your items that any user can order it from the Application and you can edit'} imgUrl={headerImg1}/>
      
-    <div className="recipes-container m-3 d-flex justify-content-between align-items-center p-4 rounded-3">
+    <div className="recipes-container m-3 d-flex  flex-column flex-sm-row justify-content-between align-items-center p-4 rounded-3">
       <div className="caption">
         <h4>Recipe Table Details</h4>
         <p>You can check all details</p>
@@ -161,6 +260,61 @@ export default function RecipesList() {
       </button> :''
       }
     </div>
+
+
+    {/* view recipe in modal */}
+    <Modal
+      show={showViewModal}
+      onHide={() => setShowViewModal(false)}
+      centered dialogClassName="small-view-modal">
+      <Modal.Header  style={{
+       background: 'linear-gradient(90deg, #009247, #fff)',color:"#fff"}} closeButton>
+        <Modal.Title>Recipe Details</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        {selectedRecipe && (
+          <div className="shadow-sm recipes-page">
+            <div className='d-flex justify-content-center mb-3'>
+              <img
+                src={
+                  selectedRecipe.imagePath
+                    ? `https://upskilling-egypt.com:3006/${selectedRecipe.imagePath}`
+                    : recipeImg
+                }
+              
+                alt={selectedRecipe.name}
+                style={{ height: '80px', borderRadius:"50%",objectFit: 'cover' }}
+              />
+            </div>
+            <div className="py-2 px-2">
+              <h6 className="mb-3">
+                <strong>Recipe Name:</strong> {selectedRecipe.name}
+              </h6>
+
+              <h6 className="mb-3">
+                <strong>Price:</strong> {selectedRecipe.price}
+              </h6>
+              <h6 className="mb-3">
+              <strong>Tag:</strong> {selectedRecipe.tag?.name}
+              </h6>
+
+              <h6 className="mb-3">
+                <strong>Category:</strong>{' '}
+                {selectedRecipe.category
+                  ?.map(cat => cat.name)
+                  .join(', ')}
+              </h6>
+
+              <h6 className="mb-3">
+                <strong>Descripton:</strong> {selectedRecipe.description}
+              </h6>
+            </div>
+          </div>
+        )}
+      </Modal.Body>
+    </Modal>
+
 
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -204,37 +358,50 @@ export default function RecipesList() {
         </Modal.Footer>
       </Modal>
 
-
-    <div className='search-container d-flex align-items-center gap-3 m-3'>
-        <div className="input-group">
+    {/* may be search individual Search by Recipe Name , Tag and Category or comparison  */}
+    <div className='search-container p-4'>
+      <div className='row g-3'>
+        <div className='col-12 col-md-6'>
+        <div className="input-group ">
           <span className="input-group-text">
           <IoIosSearch />
           </span>
           <input
             type="search"
-            className="form-control"
+            className="form-control" 
             placeholder="Search..."
+            onChange={getNameValue}
           />
         </div>
+        </div>
 
-        <select defaultValue='1' className="form-select form-select-sm w-auto" aria-label="Small select example">
-          <option value='1'>Tag</option>
-          <option value="2">One</option>
-          <option value="3">Two</option>
-          <option value="4">Three</option>
-        </select>
+        <div className='col-6 col-md-3'>
+          <select className="form-control" onChange={getTagValue} aria-label="Small select example">
+            <option value=''  disabled selected>Tag</option>
+            {tags.map(({id,name})=>(
+              <option key={id} value={id}>
+                {name}
+                </option>
 
-        <select defaultValue='1' className="form-select form-select-sm w-auto" aria-label="Small select example">
-          <option value='1'>Category</option>
-          <option value="2">One</option>
-          <option value="3">Two</option>
-          <option value="4">Three</option>
-        </select>
+            ))}
+            
+          </select>
+        </div>
 
+        <div className='col-6 col-md-3'>
+          <select className="form-control" onChange={getCategoryValue} aria-label="Small select example">
+            <option value=''  disabled selected>Category</option>
+            {categoriesList.map(({id, name})=>(
+              <option key={id} value={id}>
+              {name}
+              </option>
+
+            ))}
+           
+          </select>
+        </div>
     </div>
-   
-    
-
+    </div>
      
       {loading ?(
           <div className='d-flex justify-content-center align-items-center py-5'>
@@ -242,9 +409,11 @@ export default function RecipesList() {
           </div>
           )        
           :recipesList.length >0 ?(
-      <table className="table table-striped m-3 recipes-table">
-        <thead>
-          <tr>
+      <div className="container-fluid px-3 my-3">
+      <div className='table-resposive d-none d-lg-block'>
+      <table className="table table-striped recipes-table">
+        <thead className='table-secondary custom-thead'>
+          <tr className='p-3'>
             <th scope="col">ID</th>
             <th scope="col">Recipe Name</th>
             <th scope="col">Recipe Image</th>
@@ -255,10 +424,9 @@ export default function RecipesList() {
             <th scope="col">Actions</th>
           </tr>
         </thead>
-
         <tbody>
 
-         {recipesList.map(recipe=>(
+        {recipesList.map(recipe=>(
             <tr key={recipe?.id}>
             <th scope="row">{recipe?.id}</th>
             <td>{recipe?.name}</td>
@@ -293,7 +461,8 @@ export default function RecipesList() {
 
                 <ul className="dropdown-menu">
                   <li>
-                    <button className="dropdown-item text-success d-flex align-items-center gap-2">
+                    <button className="dropdown-item text-success d-flex align-items-center gap-2"
+                     onClick={() => handleViewRecipe(recipe)}>
                       <FaEye /> View
                     </button>
                   </li>
@@ -316,9 +485,130 @@ export default function RecipesList() {
           </tr>
 
           ))}
+
+          {/* Show message if no recipe matches search */}
+          {recipesList.length === 0 && (
+            <tr>
+              <td colSpan="8" className="text-center">No recipe found</td>
+            </tr>
+          )}
         </tbody>
       </table>
+      </div>
+      </div>
         ):(<NoData/>)}
+
+
+        {/* ===== CARDS (Mobile) ===== */}
+<div className="d-block d-lg-none my-3">
+  <div className='container'>
+    <div className='row g-3'>
+  {recipesList.length > 0 ? (
+    recipesList.map(recipe => (
+      <div key={recipe.id} className='col-12 col-sm-6 col-md-4'>
+      <div className="card h-100 shadow-sm">
+        <img
+          src={
+            recipe.imagePath
+              ? `https://upskilling-egypt.com:3006/${recipe.imagePath}`
+              : recipeImg
+          }
+          className="card-img-top"
+          alt={recipe.name}
+          style={{ height: '180px', objectFit: 'cover' }}
+        />
+
+        <div className="card-body py-3">
+          <h5 className="card-title text-center fw-bold mb-3">{recipe.name}</h5>
+          <p className="mb-1 d-flex justify-content-between mx-2">
+          <span><strong>Price:</strong>{recipe.price}</span>
+          <span><strong>Tag:</strong> {recipe.tag?.name}</span></p>
+          {/* <p className="mb-1"><strong>Tag:</strong> {recipe.tag?.name}</p> */}
+
+          <p className="mb-2 mx-2">
+            <strong>Category:</strong>{' '}
+            {recipe.category.map(cat => cat.name).join(', ')}
+          </p>
+
+          <div className="d-flex justify-content-center mt-4">
+            <button className="btn btn-outline-success btn-sm " onClick={() => handleViewRecipe(recipe)}>
+              <FaEye />
+            </button>
+
+            <Link
+              to={`/dashboard/recipe-data/${recipe.id}`}
+              className="btn btn-outline-warning btn-sm mx-3"
+            >
+              <FaEdit />
+            </Link>
+
+            <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={() => handleShow(recipe)}
+            >
+              <FaTrash />
+            </button>
+          </div>
+          </div>
+        </div>
+      </div>
+    ))
+  ) : (
+    <p className="text-center">No recipe found</p>
+  )}
+  
+  </div>
+  </div>
+</div>
+
+
+
+
+
+{/* Pagination */}
+  <nav>
+    <ul className="pagination justify-content-center">
+
+      {/* Previous */}
+      <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+        <button
+          className="page-link"
+          onClick={() => setCurrentPage(prev => prev - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+      </li>
+
+      {/* Page Numbers */}
+      {arrayOfPages.map(page => (
+        <li
+          key={page}
+          className={`page-item ${currentPage === page ? "active" : ""}`}
+        >
+          <button
+            className="page-link"
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </button>
+        </li>
+      ))}
+
+      {/* Next */}
+      <li className={`page-item ${currentPage === arrayOfPages.length ? "disabled" : ""}`}>
+        <button
+          className="page-link"
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          disabled={currentPage === arrayOfPages.length}
+        >
+          Next
+        </button>
+      </li>
+
+    </ul>
+  </nav>
+        
 
     </>
   )

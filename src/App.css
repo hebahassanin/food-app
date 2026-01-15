@@ -1,0 +1,70 @@
+/* tooltip in sidebar */
+/* .tooltip-inner {
+    background-color: #fff !important; 
+    color: #4AA35A !important;        
+    padding: 5px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    font-size: 0.9rem;
+  }
+  .tooltip.bs-tooltip-end .arrow::before {
+    border-right-color: #fff !important; 
+  } */
+
+  .modal-dialog.small-view-modal{
+    width: 350px !important;
+    max-width: 350px !important;
+    margin: auto;
+  }
+  .modal-dialog.small-delete-modal{
+    width: 400px !important;
+    max-width: 400px !important;
+    /* height:300px; */
+    margin: auto;
+
+  }
+  .modal-dialog.small-category-modal{
+    width: 400px !important;
+    max-width: 400px !important;
+    margin: auto;
+
+  }
+  .recipes-page strong,
+  .user-page strong,
+  .category-page strong{
+    color: #1ab364;
+  }
+  
+
+  /* Pagination Green Theme */
+.pagination .page-link {
+  color: #009247;            /* لون الكلمة */
+  border: 1px solid #009247; /* لون البوردر */
+}
+
+.pagination .page-link:hover {
+  background-color: #009247;
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #009247;
+  border-color: #009247;
+  color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #9bbfb0;
+  border-color: #9bbfb0;
+  background-color: #f5f5f5;
+}
+
+
+.form-select option:hover {
+  background-color: #009247 !important;  /* أخضر */
+  color: white;
+}
+  
+  
+  
+  
+  

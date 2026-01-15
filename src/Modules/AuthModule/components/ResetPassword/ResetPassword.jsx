@@ -13,7 +13,7 @@ import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function ResetPassword() {
 
-  let {register,formState:{errors},handleSubmit,watch}=useForm();
+  let {register,formState:{errors, isSubmitting},handleSubmit,watch}=useForm();
   let navigate= useNavigate();
 
   // to receive state(email) from forgetPassword page
@@ -32,11 +32,17 @@ export default function ResetPassword() {
     try {
       let response = await axiosInstance.post(USERS_URL.RESET_PASS,data);
       console.log(response);
-      toast.success(response.data.message)
+      toast.success(response.data.message,
+        {
+          autoClose: 3000
+        })
       navigate('/login');
       
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message,
+        {
+          autoClose: 3000
+        });
     }
 
   }
@@ -99,7 +105,15 @@ export default function ResetPassword() {
       </div>
       {errors.confirmPassword && <div className='alert alert-danger p-2'>{errors.confirmPassword.message}</div>}
 
-      <button className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>Reset Password</button>
+      <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>
+      {isSubmitting ?(
+          <>
+           Reset Password
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):('Reset Password')}
+       
+        </button>
       
       </form>
 

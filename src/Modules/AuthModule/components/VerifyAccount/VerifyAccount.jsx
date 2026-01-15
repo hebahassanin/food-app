@@ -9,7 +9,7 @@ import { axiosInstance } from '../../../../Services/END_POINTS.JS';
 import { USERS_URL } from '../../../../Services/END_POINTS.JS';
 
 export default function VerifyAccount() {
-  let {register,formState:{errors},handleSubmit}=useForm();
+  let {register,formState:{errors,isSubmitting},handleSubmit}=useForm();
   let navigate = useNavigate();
 
    // to receive state(email) from register page
@@ -19,12 +19,18 @@ export default function VerifyAccount() {
   let onSubmit =async(data)=>{
     try {
       let response = await axiosInstance.put(USERS_URL.VERIFY,data);
-      toast.success('Account verified successfully');
+      toast.success('Account verified successfully',
+      {
+        autoClose:3000
+      });
       navigate('/');
 
       
     } catch (error) {
-      toast.error("Verification failed, please try again");
+      toast.error("Verification failed, please try again",
+      {
+        autoClose:3000
+      });
       
     }
     
@@ -43,7 +49,7 @@ export default function VerifyAccount() {
       <form onSubmit={handleSubmit(onSubmit)}>
       <div className="input-group my-4">
           <span className="input-group-text" id="basic-addon1"><FaRegEnvelope /></span>
-          <input type="text" readOnly defaultValue={passedEmail} className="form-control" placeholder="Enter Your E-mail" aria-label="email" aria-describedby="basic-addon1"
+          <input  type="text" readOnly defaultValue={passedEmail} className="form-control" placeholder="Enter Your E-mail" aria-label="email" aria-describedby="basic-addon1"
           {...register('email',{required:'email is required',
           pattern:{
             value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
@@ -62,7 +68,14 @@ export default function VerifyAccount() {
       </div>
       {errors.code && <div className='alert alert-danger p-2'>{errors.code.message}</div>}
 
-      <button className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>Send</button>
+      <button disabled={isSubmitting} className='btn button-bg text-white  fs-5 fw-bold w-100 py-2 mt-2'>
+      {isSubmitting ?(
+          <>
+          Send
+          <span className='spinner-border spinner-border-sm ms-2' role='status' aria-hidden='true'/>
+          </>
+        ):('Send')}
+        </button>
 
       </form>
     </>
