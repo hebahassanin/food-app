@@ -376,7 +376,7 @@ export default function RecipesList() {
         </div>
 
         <div className='col-6 col-md-3'>
-          <select className="form-control" onChange={getTagValue} aria-label="Small select example">
+          <select className="form-select" onChange={getTagValue} aria-label="Small select example">
             <option value=''  disabled selected>Tag</option>
             {tags.map(({id,name})=>(
               <option key={id} value={id}>
@@ -389,7 +389,7 @@ export default function RecipesList() {
         </div>
 
         <div className='col-6 col-md-3'>
-          <select className="form-control" onChange={getCategoryValue} aria-label="Small select example">
+          <select className="form-select" onChange={getCategoryValue} aria-label="Small select example">
             <option value=''  disabled selected>Category</option>
             {categoriesList.map(({id, name})=>(
               <option key={id} value={id}>

@@ -153,7 +153,7 @@ export default function RecipeData() {
        />
        {errors.name && <div className='text-danger'>{errors.name.message}</div>}
 
-      <select defaultValue="1" {...register('tagId',{required: 'Tags is required'})} className="form-control my-2">
+      <select defaultValue="1" {...register('tagId',{required: 'Tags is required'})} className="form-select my-2">
        <option className='text-muted' disabled value="1">choose</option>
         {tagsList.map(tag =>
         <option key={tag?.id} value={tag?.id}>{tag?.name}</option>
@@ -167,7 +167,7 @@ export default function RecipeData() {
       />
       {errors.price &&<div className='text-danger'>{errors.price.message}</div>}
 
-      <select defaultValue="1" {...register('categoriesIds',{required:'categoriesIds is required'})} className="form-control my-2">
+      <select defaultValue="1" {...register('categoriesIds',{required:'categoriesIds is required'})} className="form-select my-2">
         <option className='text-muted' disabled value="1">choose</option>
       {categoriesList.map(category =>
         <option key={category?.id} value={category?.id}>{category?.name}</option>

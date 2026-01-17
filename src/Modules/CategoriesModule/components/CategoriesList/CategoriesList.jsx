@@ -200,7 +200,7 @@ export default function CategoriesList() {
    const getNameValue=(input)=>{
     setNameValue(input.target.value);
     setCurrentPage(1);
-    getAllCategories(1,pageSize, input.target.value);
+    // getAllCategories(1,pageSize, input.target.value);
 
   }
 
@@ -221,8 +221,8 @@ export default function CategoriesList() {
   },[])
 
   useEffect(()=>{
-    getAllCategories(currentPage, pageSize);
-  },[currentPage]);
+    getAllCategories(currentPage, pageSize, nameValue);
+  },[currentPage, nameValue]);
 
 
   return (
