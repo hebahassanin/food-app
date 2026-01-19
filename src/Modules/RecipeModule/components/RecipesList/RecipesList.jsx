@@ -532,11 +532,34 @@ export default function RecipesList() {
 
           <div className="d-flex justify-content-center mt-4">
 
-          {userData?.userGroup == 'SystemUser' &&
+          {userData?.userGroup == 'SystemUser' ?
             (favoriteRecipes.includes(recipe.id)?
               ( <FaHeart  color='red' style={{cursor:'pointer'}}/>) :
-            (<FaRegHeart color="red" style={{cursor:'pointer'}} onClick={()=> handleAddfav(recipe)}/>)) }
-            
+            (<FaRegHeart color="red" style={{cursor:'pointer'}} onClick={()=> handleAddfav(recipe)}/>))
+            :(
+              <>
+
+           <button className="btn btn-outline-success btn-sm " onClick={() => handleViewRecipe(recipe)}>
+              <FaEye />
+            </button>
+
+             <Link
+              to={`/dashboard/recipe-data/${recipe.id}`}
+              className="btn btn-outline-warning btn-sm mx-3"
+            >
+              <FaEdit />
+            </Link> 
+
+             <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={() => handleShow(recipe)}
+            >
+              <FaTrash />
+            </button> 
+              
+              </>
+             )}
+             
           </div>
           </div>
         </div>
