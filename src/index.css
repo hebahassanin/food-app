@@ -97,7 +97,8 @@
 .sidebar-container .ps-sidebar-container{
     border-top-right-radius: 35px;
     color: #fff;
-    min-height: 100vh;
+    /* min-height: 100vh; */
+    min-height: 100%;;
     background-color: rgba(31, 38, 62, 1);
 }
 .sidebar-container .ps-menu-button{
@@ -132,7 +133,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    /* height: 100vh; */
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
     width: 250px;
     z-index: 1000;
   }
